@@ -1,0 +1,11 @@
+# API endpoint for signup
+url = "http://localhost:5001/api/auth/signup"
+
+# Use POST method
+request = "POST"
+
+# Set the header to JSON
+header = "Content-Type: application/json"
+
+# JSON payload with properly escaped quotes
+data = "{\"fullName\":\"Kitto\",\"email\":\"kitto121@gmail.com\",\"password\":\"123321\"}"
