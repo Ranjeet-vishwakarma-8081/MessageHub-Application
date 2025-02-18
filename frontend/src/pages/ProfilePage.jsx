@@ -58,7 +58,7 @@ const ProfilePage = () => {
             </div>
             <p className="text-sm text-zinc-400">
               {isUpdatingProfile
-                ? "Updating profile picture..."
+                ? "Updating your profile picture..."
                 : "Click the camera icon to update your photo"}
             </p>
           </div>
@@ -93,7 +93,7 @@ const ProfilePage = () => {
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>Account Status</span>
-                <span className="text-green-500">Active</span>
+                <span className="text-green-600">Active</span>
               </div>
             </div>
           </div>

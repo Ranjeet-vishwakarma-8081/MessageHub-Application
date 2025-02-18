@@ -15,6 +15,7 @@ const useAuthStore = create((set, get) => ({
   // Socket states
   socket: null,
   onlineUsers: [],
+  msgSenderName:null,
 
   isSigningUp: false,
   isLoggingIn: false,
@@ -99,16 +100,14 @@ const useAuthStore = create((set, get) => ({
       set({ authUser: null, message: error.response.data.message });
     }
   },
-
+  setMsgSenderName: (senderName)=>{
+    set({ msgSenderName: senderName });
+  },
   // Socket Implementation
   connectSocket: () => {
     const { authUser } = get();
     // Optimization
-    if (
-      !authUser ||
-      get().socket?.connected // If we are already connect then don't try to create a new connection for this user
-    )
-      return;
+    if (!authUser || get().socket?.connected) return;
     const socket = io(BASE_URL, {
       query: {
         userId: authUser._id,
@@ -119,21 +118,7 @@ const useAuthStore = create((set, get) => ({
     set({ socket: socket });
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
-    });
-
-    // const socket = io(BASE_URL, {
-    //   withCredentials: true,
-    // });
-
-    // socket.on("connect", () => {
-    //   console.log("Connected to the socket server");
-    // });
-
-    // socket.on("disconnect", () => {
-    //   console.log("Disconnected from the socket server");
-    // });
-
-    // set({ socket });
+    })
   },
   disconnectSocket: () => {
     if (get().socket?.connected) get().socket.disconnect();

@@ -14,21 +14,26 @@ import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 
 const App = () => {
-  const { authUser, message, checkAuth, isCheckingAuth, onlineUsers } =
-    useAuthStore();
+  const {
+    authUser,
+    // message,
+    checkAuth,
+    isCheckingAuth,
+    // onlineUsers
+  } = useAuthStore();
   const { theme } = useThemeStore();
-  console.log({ onlineUsers });
+  // console.log({ onlineUsers });
 
   // When app loads, It checks if the current user is authenticated or not.
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  if (!authUser) {
-    console.log(message);
-  } else {
-    console.log("AuthUser:", authUser.fullName, "has", message);
-  }
+  // if (!authUser) {
+  //   console.log(message);
+  // } else {
+  //   console.log("AuthUser:", authUser.fullName, "has", message);
+  // }
   // If checkingAuth, display a loading spinner.
   if (isCheckingAuth && !authUser)
     return (

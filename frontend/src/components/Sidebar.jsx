@@ -1,14 +1,29 @@
 import { useEffect, useState } from "react";
-import useChatStore from "../store/useChatStore";
+import { Lock, Users } from "lucide-react";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
-import { Users } from "lucide-react";
+import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChatStore();
-  const { onlineUsers } = useAuthStore();
+  const { onlineUsers, socket, setMsgSenderName, msgSenderName } =
+    useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("userTyping", ({ senderName }) => {
+      setMsgSenderName(senderName);
+    });
+    socket.on("userStoppedTyping", () => {
+      setMsgSenderName("");
+    });
+    return () => {
+      socket.off("userTyping");
+      socket.off("userStoppedTyping");
+    };
+  }, [socket, setMsgSenderName]);
 
   useEffect(() => {
     getUsers();
@@ -17,7 +32,6 @@ const Sidebar = () => {
   const filteredUsers = showOnlineOnly
     ? users.filter((user) => onlineUsers.includes(user._id))
     : users;
-
   if (isUsersLoading) return <SidebarSkeleton />;
   return (
     <aside className="flex flex-col w-20 h-full transition-all duration-200 border-r lg:w-72 border-base-300">
@@ -27,7 +41,7 @@ const Sidebar = () => {
           <Users className="size-6" />
           <span className="hidden font-medium lg:block">Contacts</span>
         </div>
-        {/* Online Users // TODO:Online filter toggle */}
+        {/* Online Users */}
         <div className="items-center hidden gap-2 mt-3 lg:flex">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -71,14 +85,30 @@ const Sidebar = () => {
             <div className="hidden min-w-0 text-left lg:block">
               <div className="font-medium truncate">{user.fullName}</div>
               <div className="text-sm text-zinc-400">
-                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                {onlineUsers.includes(user._id) &&
+                user.fullName.split(" ")[0] !== msgSenderName
+                  ? "Online"
+                  : user.fullName.split(" ")[0] === msgSenderName
+                  ? `${msgSenderName} is typing...`
+                  : "offline"}
               </div>
             </div>
           </button>
         ))}
         {filteredUsers.length === 0 && (
           <div className="py-4 text-sm text-center text-zinc-500">
-            Oops! No online users yet
+            No online user found!
+          </div>
+        )}
+        {filteredUsers.length !== 0 && (
+          <div className="px-6 py-4 text-xs text-zinc-500 ">
+            <div className="flex justify-center">
+              <Lock size="12" />
+              <div className="pl-1">
+                Your personal messages are{" "}
+                <span className="text-green-600">end-to-end encrypted.</span>
+              </div>
+            </div>
           </div>
         )}
       </div>

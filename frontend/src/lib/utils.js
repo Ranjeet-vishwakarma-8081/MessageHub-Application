@@ -1,9 +1,6 @@
-export const formatMessageTime = () =>
-  new Date().toLocaleString("en-US", {
-    // hour: 'numeric',
-    // minute: 'numeric',
-    // hour12: true,
-    hour: "2-digit",
+export const formatMessageTime = (date) =>
+  new Date(date).toLocaleString("en-US", {
+    hour: "numeric",
     minute: "2-digit",
-    hour12: false,
+    hour12: true,
   });

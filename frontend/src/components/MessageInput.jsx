@@ -2,13 +2,14 @@ import { useRef, useState } from "react";
 import useChatStore from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
+import useAuthStore from "../store/useAuthStore";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-
-  const { sendMessage } = useChatStore();
+  const { socket, authUser } = useAuthStore();
+  const { sendMessage, selectedUser } = useChatStore();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -39,10 +40,27 @@ const MessageInput = () => {
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
+      handleStopTyping(); // Stop typing when message is sent
     } catch (error) {
       toast.error(error.response.data.message);
       console.error("Failed to send message -", error.message);
     }
+  };
+  let typingTimeout;
+  const handleTyping = () => {
+    clearTimeout(typingTimeout); 
+    const receiverId = selectedUser._id;
+    const senderName = authUser.fullName.split(" ")[0];
+    
+    socket.emit("typing", { receiverId, senderName });
+    // Stop typing automatically after 2 seconds of inactivity
+    typingTimeout = setTimeout(() => {
+      socket.emit("stopTyping", { receiverId });
+  }, 2000);
+  };
+  const handleStopTyping = () => {
+    const receiverId = selectedUser._id;
+    socket.emit("stopTyping", { receiverId });
   };
 
   return (
@@ -73,7 +91,11 @@ const MessageInput = () => {
             className="w-full rounded-lg input input-bordered input-sm sm:input-md"
             placeholder="Type a message..."
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => {
+              setText(e.target.value);
+              handleTyping();
+            }}
+            onBlur={handleStopTyping} // When user clicks away
           />
           <input
             type="file"
@@ -94,10 +116,10 @@ const MessageInput = () => {
         {/* Send button */}
         <button
           type="submit"
-          className="btn btn-sm btn-circle"
+          className="btn btn-circle"
           disabled={!text.trim() && !imagePreview}
         >
-          <Send className="size-6" />
+          <Send className="size-5" />
         </button>
       </form>
     </div>
