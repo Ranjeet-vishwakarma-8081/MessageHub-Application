@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
+import { formatMessageTime } from "../lib/utils";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
@@ -28,7 +29,7 @@ const ChatHeader = () => {
                 ? "Online"
                 : selectedUser.fullName.split(" ")[0] === msgSenderName
                 ? `${msgSenderName} is typing...`
-                : "offline"}
+                : `last seen at ${formatMessageTime(new Date())}`}
             </p>
           </div>
         </div>

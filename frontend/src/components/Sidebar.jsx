@@ -5,8 +5,13 @@ import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
-    useChatStore();
+  const {
+    getUsers,
+    users,
+    selectedUser,
+    setSelectedUser,
+    isUsersLoading,
+  } = useChatStore();
   const { onlineUsers, socket, setMsgSenderName, msgSenderName } =
     useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
@@ -34,15 +39,19 @@ const Sidebar = () => {
     : users;
   if (isUsersLoading) return <SidebarSkeleton />;
   return (
-    <aside className="flex flex-col w-20 h-full transition-all duration-200 border-r lg:w-72 border-base-300">
+    <aside
+      className={`${
+        selectedUser ? "hidden md:flex " : "flex"
+      } flex-col h-full transition-all duration-200 border-r w-96 md:max-w-80 border-base-300`}
+    >
       {/* Header */}
-      <div className="w-full p-5 border-b border-base-300">
+      <div className="w-full p-4 border-b border-base-300">
         <div className="flex items-center gap-2">
           <Users className="size-6" />
-          <span className="hidden font-medium lg:block">Contacts</span>
+          <span className="font-medium">Contacts</span>
         </div>
         {/* Online Users */}
-        <div className="items-center hidden gap-2 mt-3 lg:flex">
+        <div className="flex items-center gap-2 mt-3 ">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
@@ -56,14 +65,23 @@ const Sidebar = () => {
             ({onlineUsers.length - 1} online)
           </span>
         </div>
+        {/* Search Input */}
+        <div className="flex items-center mt-3">
+          <input
+            type="text"
+            className="w-full rounded-lg input input-bordered input-sm"
+            placeholder="Start typing to find contacts..."
+          ></input>
+        </div>
       </div>
-      <div className="w-full py-3 overflow-y-auto">
+      {/* User details */}
+      <div className="w-full pt-2 overflow-y-auto">
         {filteredUsers.map((user) => (
           <button
             key={user._id}
             onClick={() => setSelectedUser(user)}
             className={`
-                w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${
+                p-3 gap-3 w-full flex hover:bg-base-300 transition-colors max-h-16 ${
                   selectedUser?._id === user._id
                     ? " bg-base-200 ring-1 ring-base-300"
                     : ""
@@ -71,7 +89,7 @@ const Sidebar = () => {
                 `}
           >
             {/* User avatar - visible on all screens */}
-            <div className="relative mx-auto lg:mx-0">
+            <div className="relative">
               <img
                 src={user.profilePic || "/avatar.png"}
                 alt="user.name"
@@ -82,36 +100,39 @@ const Sidebar = () => {
               )}
             </div>
             {/* User info - Only visible on larger screens */}
-            <div className="hidden min-w-0 text-left lg:block">
+            <div className="text-left">
               <div className="font-medium truncate">{user.fullName}</div>
-              <div className="text-sm text-zinc-400">
-                {onlineUsers.includes(user._id) &&
-                user.fullName.split(" ")[0] !== msgSenderName
-                  ? "Online"
-                  : user.fullName.split(" ")[0] === msgSenderName
-                  ? `${msgSenderName} is typing...`
-                  : "offline"}
+              <div className="text-sm text-zinc-400 ">
+                {
+                  onlineUsers.includes(user._id) &&
+                  user.fullName.split(" ")[0] !== msgSenderName
+                    ? "Online"
+                    : user.fullName.split(" ")[0] === msgSenderName
+                    ? `${msgSenderName} is typing...`
+                    : "Offline"
+                }
               </div>
             </div>
           </button>
         ))}
-        {filteredUsers.length === 0 && (
-          <div className="py-4 text-sm text-center text-zinc-500">
-            No online user found!
-          </div>
-        )}
-        {filteredUsers.length !== 0 && (
-          <div className="px-6 py-4 text-xs text-zinc-500 ">
-            <div className="flex justify-center">
-              <Lock size="12" />
-              <div className="pl-1">
-                Your personal messages are{" "}
-                <span className="text-green-600">end-to-end encrypted.</span>
-              </div>
+      </div>
+      {filteredUsers.length === 0 ? (
+        <div className="py-4 text-sm text-center text-zinc-500">
+          No online user found!
+        </div>
+      ) : (
+        <div className="px-8 py-6 text-zinc-500 ">
+          <div className="flex justify-center">
+            <Lock size="13" />
+            <div className="pl-1 text-xs text-center">
+              Your personal messages are{" "}
+              <span className="text-green-600 text-bold">
+                end-to-end encrypted.
+              </span>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </aside>
   );
 };

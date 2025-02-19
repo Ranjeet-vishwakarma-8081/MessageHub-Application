@@ -44,7 +44,7 @@ const ChatContainer = () => {
   }
 
   return (
-    <div className="flex flex-col flex-1 overflow-auto">
+    <div className="flex flex-col flex-1 overflow-auto ">
       {/* Chat header */}
       <ChatHeader />
 
@@ -90,7 +90,6 @@ const ChatContainer = () => {
           </div>
         ))}
       </div>
-
       {/* Message Input */}
       <MessageInput />
     </div>

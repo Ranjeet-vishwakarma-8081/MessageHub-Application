@@ -36,7 +36,7 @@ const useChatStore = create((set, get) => ({
   },
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get(); //This is how, we can use the state varible inside the zustand store.
-    console.log(messageData);
+
     try {
       const res = await axiosInstance.post(
         `/messages/send/${selectedUser._id}`,

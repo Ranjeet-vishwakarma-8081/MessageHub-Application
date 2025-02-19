@@ -88,7 +88,7 @@ const MessageInput = () => {
         <div className="flex flex-1 gap-2">
           <input
             type="text"
-            className="w-full rounded-lg input input-bordered input-sm sm:input-md"
+            className="w-full rounded-lg input input-bordered input-md"
             placeholder="Type a message..."
             value={text}
             onChange={(e) => {
@@ -106,7 +106,7 @@ const MessageInput = () => {
           />
           <button
             type="button"
-            className={`hidden sm:flex btn btn-circle 
+            className={`flex btn btn-circle 
             ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()} // behind the seen It will call the input element
           >
