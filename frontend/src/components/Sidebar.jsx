@@ -1,42 +1,54 @@
-import { useEffect, useState } from "react";
-import { Lock, Users } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Lock, Search, Users } from "lucide-react";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
 
 const Sidebar = () => {
-  const {
-    getUsers,
-    users,
-    selectedUser,
-    setSelectedUser,
-    isUsersLoading,
-  } = useChatStore();
+  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
+    useChatStore();
   const { onlineUsers, socket, setMsgSenderName, msgSenderName } =
     useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const searchRef = useRef("");
+
+  // ✅ Wrap filterUsers inside useCallback to prevent re-creation
+  const filterUsers = useCallback(() => {
+    const searchTerm = searchRef.current?.value?.toLowerCase();
+
+    let filtered = showOnlineOnly
+      ? users.filter((user) => onlineUsers.includes(user._id)) // Only online users
+      : users; // All users
+
+    if (searchTerm) {
+      filtered = filtered.filter((user) =>
+        user.fullName.toLowerCase().includes(searchTerm)
+      );
+    }
+
+    setFilteredUsers(filtered);
+  }, [users, onlineUsers, showOnlineOnly]);
+
+  // fetch users on componenet mount
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
+
+  useEffect(() => {
+    filterUsers();
+  }, [filterUsers]);
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("userTyping", ({ senderName }) => {
-      setMsgSenderName(senderName);
-    });
-    socket.on("userStoppedTyping", () => {
-      setMsgSenderName("");
-    });
+    socket.on("userTyping", ({ senderName }) => setMsgSenderName(senderName));
+    socket.on("userStoppedTyping", () => setMsgSenderName(""));
     return () => {
       socket.off("userTyping");
       socket.off("userStoppedTyping");
     };
   }, [socket, setMsgSenderName]);
 
-  useEffect(() => {
-    getUsers();
-  }, [getUsers]);
-
-  const filteredUsers = showOnlineOnly
-    ? users.filter((user) => onlineUsers.includes(user._id))
-    : users;
   if (isUsersLoading) return <SidebarSkeleton />;
   return (
     <aside
@@ -50,13 +62,16 @@ const Sidebar = () => {
           <Users className="size-6" />
           <span className="font-medium">Contacts</span>
         </div>
-        {/* Online Users */}
+        {/* Online Users Toggle*/}
         <div className="flex items-center gap-2 mt-3 ">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
               checked={showOnlineOnly}
-              onChange={(e) => setShowOnlineOnly(e.target.checked)}
+              onChange={(e) => {
+                setShowOnlineOnly(e.target.checked);
+                filterUsers(); // Apply filter when toggled
+              }}
               className="checkbox checkbox-sm"
             />
             <span className="text-sm">Show online only</span>
@@ -66,57 +81,61 @@ const Sidebar = () => {
           </span>
         </div>
         {/* Search Input */}
-        <div className="flex items-center mt-3">
+        <div className="relative mt-3">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+            <Search className=" size-5 text-base-content/40" />
+          </div>
           <input
             type="text"
-            className="w-full rounded-lg input input-bordered input-sm"
+            className="w-full pl-10 rounded-lg input input-bordered input-sm"
             placeholder="Start typing to find contacts..."
-          ></input>
+            ref={searchRef}
+            onChange={filterUsers}
+          />
         </div>
       </div>
       {/* User details */}
       <div className="w-full pt-2 overflow-y-auto">
-        {filteredUsers.map((user) => (
-          <button
-            key={user._id}
-            onClick={() => setSelectedUser(user)}
-            className={`
+        {filteredUsers.length > 0 &&
+          filteredUsers.map((user) => (
+            <button
+              key={user._id}
+              onClick={() => setSelectedUser(user)}
+              className={`
                 p-3 gap-3 w-full flex hover:bg-base-300 transition-colors max-h-16 ${
                   selectedUser?._id === user._id
                     ? " bg-base-200 ring-1 ring-base-300"
                     : ""
                 }
                 `}
-          >
-            {/* User avatar - visible on all screens */}
-            <div className="relative">
-              <img
-                src={user.profilePic || "/avatar.png"}
-                alt="user.name"
-                className="object-cover rounded-full size-12"
-              />
-              {onlineUsers.includes(user._id) && (
-                <span className="absolute bottom-0 right-0 bg-green-500 rounded-full ring-2 size-3 ring-zinc-900" />
-              )}
-            </div>
-            {/* User info - Only visible on larger screens */}
-            <div className="text-left">
-              <div className="font-medium truncate">{user.fullName}</div>
-              <div className="text-sm text-zinc-400 ">
-                {
-                  onlineUsers.includes(user._id) &&
+            >
+              {/* User avatar */}
+              <div className="relative">
+                <img
+                  src={user.profilePic || "/avatar.png"}
+                  alt="user.fullName"
+                  className="object-cover rounded-full size-12"
+                />
+                {onlineUsers.includes(user._id) && (
+                  <span className="absolute bottom-0 right-0 bg-green-500 rounded-full ring-2 size-3 ring-zinc-900" />
+                )}
+              </div>
+              {/* User info */}
+              <div className="text-left">
+                <div className="font-medium truncate">{user.fullName}</div>
+                <div className="text-sm text-zinc-400 ">
+                  {onlineUsers.includes(user._id) &&
                   user.fullName.split(" ")[0] !== msgSenderName
                     ? "Online"
                     : user.fullName.split(" ")[0] === msgSenderName
                     ? `${msgSenderName} is typing...`
-                    : "Offline"
-                }
+                    : "Offline"}
+                </div>
               </div>
-            </div>
-          </button>
-        ))}
+            </button>
+          ))}
       </div>
-      {filteredUsers.length === 0 ? (
+      {filteredUsers?.length === 0 ? (
         <div className="py-4 text-sm text-center text-zinc-500">
           No online user found!
         </div>
