@@ -56,7 +56,7 @@ const Sidebar = () => {
       } flex-col h-full transition-all duration-200 border-r w-96 md:max-w-80 border-base-300`}
     >
       {/* Header */}
-      <div className="w-full p-4 border-b border-base-300 space-y-3">
+      <div className="w-full p-4 space-y-3 border-b border-base-300">
         {/* Search Input */}
         <div className="relative ">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -112,19 +112,23 @@ const Sidebar = () => {
                   className="object-cover rounded-full size-12"
                 />
                 {onlineUsers.includes(user._id) && (
-                  <span className="absolute bottom-0 right-0 bg-green-500 rounded-full ring-2 size-3 ring-zinc-900" />
+                  <span className="absolute bottom-0 right-0 bg-green-600 rounded-full ring-2 size-3 ring-zinc-900" />
                 )}
               </div>
               {/* User info */}
               <div className="text-left">
                 <div className="font-medium truncate">{user.fullName}</div>
-                <div className="text-sm text-zinc-400 ">
+                <div className="text-sm">
                   {onlineUsers.includes(user._id) &&
-                  user.fullName.split(" ")[0] !== msgSenderName
-                    ? "Online"
-                    : user.fullName.split(" ")[0] === msgSenderName
-                    ? `${msgSenderName} is typing...`
-                    : "Offline"}
+                  user.fullName.split(" ")[0] !== msgSenderName ? (
+                    <span className="text-green-600">Online</span>
+                  ) : user.fullName.split(" ")[0] === msgSenderName ? (
+                    <span className="text-green-600">
+                      {msgSenderName} is typing...
+                    </span>
+                  ) : (
+                    <span className="text-zinc-400">Offline</span>
+                  )}
                 </div>
               </div>
             </button>

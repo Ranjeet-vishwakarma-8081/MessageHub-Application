@@ -28,13 +28,19 @@ const ChatHeader = () => {
             {/* User Info */}
             <div>
               <h3 className="font-medium">{selectedUser.fullName}</h3>
-              <p className="text-sm text-base-content/70">
+              <p className="text-sm">
                 {onlineUsers.includes(selectedUser._id) &&
-                selectedUser.fullName.split(" ")[0] !== msgSenderName
-                  ? "Online"
-                  : selectedUser.fullName.split(" ")[0] === msgSenderName
-                  ? `${msgSenderName} is typing...`
-                  : `last seen at ${formatMessageTime(new Date())}`}
+                selectedUser.fullName.split(" ")[0] !== msgSenderName ? (
+                  <span className="text-green-600">Online</span>
+                ) : selectedUser.fullName.split(" ")[0] === msgSenderName ? (
+                  <span className="text-green-600">
+                    {msgSenderName} is typing...
+                  </span>
+                ) : (
+                  <span className="text-zinc-400">
+                    last seen at {formatMessageTime(new Date())}
+                  </span>
+                )}
               </p>
             </div>
           </div>
