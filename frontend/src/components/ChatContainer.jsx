@@ -79,7 +79,7 @@ const ChatContainer = () => {
             </div>
             {/* messages */}
             <div
-              className={`flex flex-col chat-bubble font-medium
+              className={`flex flex-col chat-bubble 
               ${
                 message.senderId === authUser._id
                   ? "chat-end bg-primary text-primary-content/70"
