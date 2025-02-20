@@ -11,8 +11,8 @@ const ChatHeader = () => {
     <div
       className={` ${
         selectedUser &&
-        "fixed sm:static inset-x-0 top-0 z-10 pt-[env(safe-area-inset-bottom)]"
-      } bg-base-100  w-full p-3 pt-3 border-b border-base-300`}
+        "fixed sm:static inset-x-0 top-0 z-10 pt-[env(safe-area-inset-bottom) ] "
+      } bg-base-100  w-full p-3  border-b border-base-300`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center">
