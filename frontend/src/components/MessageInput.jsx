@@ -48,15 +48,15 @@ const MessageInput = () => {
   };
   let typingTimeout;
   const handleTyping = () => {
-    clearTimeout(typingTimeout); 
+    clearTimeout(typingTimeout);
     const receiverId = selectedUser._id;
     const senderName = authUser.fullName.split(" ")[0];
-    
+
     socket.emit("typing", { receiverId, senderName });
     // Stop typing automatically after 2 seconds of inactivity
     typingTimeout = setTimeout(() => {
       socket.emit("stopTyping", { receiverId });
-  }, 2000);
+    }, 2000);
   };
   const handleStopTyping = () => {
     const receiverId = selectedUser._id;
@@ -64,64 +64,70 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="w-full p-4">
-      {imagePreview && (
-        <div className="flex items-center gap-2 mb-3">
-          <div className="relative">
-            <img
-              src={imagePreview}
-              alt="Preview"
-              className="object-cover border rounded-lg size-20 border-zinc-700"
+    <div className={`${selectedUser && "relative"}`}>
+      <div
+        className={`${
+          selectedUser && " fixed sm:static inset-x-0 bottom-0 bg-base-100"
+        } w-full p-3 `}
+      >
+        {imagePreview && (
+          <div className="flex items-center gap-2 mb-3">
+            <div className="relative">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="object-cover border rounded-lg size-20 border-zinc-700"
+              />
+              <button
+                type="button"
+                className="absolute -top-1.5 -right-1.5 rounded-full bg-base-300 flex items-center justify-center"
+                onClick={removeImage}
+              >
+                <X className="size-3" />
+              </button>
+            </div>
+          </div>
+        )}
+        {/* Form for handling the input messages */}
+        <form className="flex items-center gap-2" onSubmit={handleSendMessage}>
+          <div className="flex flex-1 gap-2">
+            <input
+              type="text"
+              className="w-full rounded-full input input-bordered input-md"
+              placeholder="Type a message..."
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value);
+                handleTyping();
+              }}
+              onBlur={handleStopTyping} // When user clicks away
+            />
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={handleImageChange}
             />
             <button
               type="button"
-              className="absolute -top-1.5 -right-1.5 rounded-full bg-base-300 flex items-center justify-center"
-              onClick={removeImage}
+              className={`flex btn btn-circle bg-base-200
+            ${imagePreview ? "text-emerald-500" : "text-amber-600"}`}
+              onClick={() => fileInputRef.current?.click()} // behind the seen It will call the input element
             >
-              <X className="size-3" />
+              <Image className="size-5" />
             </button>
           </div>
-        </div>
-      )}
-      {/* Form for handling the input messages */}
-      <form className="flex items-center gap-2" onSubmit={handleSendMessage}>
-        <div className="flex flex-1 gap-2">
-          <input
-            type="text"
-            className="w-full rounded-full input input-bordered input-md"
-            placeholder="Type a message..."
-            value={text}
-            onChange={(e) => {
-              setText(e.target.value);
-              handleTyping();
-            }}
-            onBlur={handleStopTyping} // When user clicks away
-          />
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            ref={fileInputRef}
-            onChange={handleImageChange}
-          />
+          {/* Send button */}
           <button
-            type="button"
-            className={`flex btn btn-circle bg-base-200
-            ${imagePreview ? "text-emerald-500" : "text-amber-600"}`}
-            onClick={() => fileInputRef.current?.click()} // behind the seen It will call the input element
+            type="submit"
+            className="btn btn-circle btn-primary"
+            disabled={!text.trim() && !imagePreview}
           >
-            <Image className="size-5" />
+            <Send className="size-5" />
           </button>
-        </div>
-        {/* Send button */}
-        <button
-          type="submit"
-          className="btn btn-circle btn-primary"
-          disabled={!text.trim() && !imagePreview}
-        >
-          <Send className="size-5" />
-        </button>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

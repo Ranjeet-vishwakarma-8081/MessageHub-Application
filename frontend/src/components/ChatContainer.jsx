@@ -49,7 +49,7 @@ const ChatContainer = () => {
       <ChatHeader />
 
       {/* Chat Messages */}
-      <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+      <div className="flex-1 p-4 my-16 space-y-4 overflow-y-auto sm:my-0">
         {messages.map((message) => (
           <div
             key={message._id}
