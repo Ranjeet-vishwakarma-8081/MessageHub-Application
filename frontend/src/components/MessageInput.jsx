@@ -66,8 +66,7 @@ const MessageInput = () => {
   return (
     <div
       className={`${
-        selectedUser &&
-        " fixed sm:static inset-x-0 bottom-0 bg-base-100 pb-[env(safe-area-inset-bottom) ]"
+        selectedUser && " fixed sm:static inset-x-0 bottom-0 bg-base-100 "
       } w-full p-3 pb-3`}
     >
       {imagePreview && (
