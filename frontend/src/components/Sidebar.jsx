@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Lock, Search, Users } from "lucide-react";
+import { Lock, Search } from "lucide-react";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
@@ -17,8 +17,8 @@ const Sidebar = () => {
     const searchTerm = searchRef.current?.value?.toLowerCase();
 
     let filtered = showOnlineOnly
-      ? users.filter((user) => onlineUsers.includes(user._id)) 
-      : users; 
+      ? users.filter((user) => onlineUsers.includes(user._id))
+      : users;
 
     if (searchTerm) {
       filtered = filtered.filter((user) =>
@@ -56,13 +56,22 @@ const Sidebar = () => {
       } flex-col h-full transition-all duration-200 border-r w-96 md:max-w-80 border-base-300`}
     >
       {/* Header */}
-      <div className="w-full p-4 border-b border-base-300">
-        <div className="flex items-center gap-2">
-          <Users className="size-6" />
-          <span className="font-medium">Contacts</span>
+      <div className="w-full p-4 border-b border-base-300 space-y-3">
+        {/* Search Input */}
+        <div className="relative ">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+            <Search className=" size-5 text-base-content/40" />
+          </div>
+          <input
+            type="text"
+            className="w-full pl-10 rounded-full input input-bordered input-md"
+            placeholder="Start typing to find contacts..."
+            ref={searchRef}
+            onChange={filterUsers}
+          />
         </div>
         {/* Online Users Toggle*/}
-        <div className="flex items-center gap-2 mt-3 ">
+        <div className="flex items-center gap-2 ">
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
@@ -78,19 +87,6 @@ const Sidebar = () => {
           <span className="text-xs text-zinc-500">
             ({onlineUsers.length - 1} online)
           </span>
-        </div>
-        {/* Search Input */}
-        <div className="relative mt-3">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3">
-            <Search className=" size-5 text-base-content/40" />
-          </div>
-          <input
-            type="text"
-            className="w-full pl-10 rounded-full input input-bordered input-md"
-            placeholder="Start typing to find contacts..."
-            ref={searchRef}
-            onChange={filterUsers}
-          />
         </div>
       </div>
       {/* User details */}

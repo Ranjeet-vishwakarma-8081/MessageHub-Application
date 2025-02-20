@@ -1,4 +1,4 @@
-import { Users, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 const SidebarSkeleton = () => {
   // Create 8 skeleton items
@@ -7,21 +7,9 @@ const SidebarSkeleton = () => {
   return (
     <aside className="flex flex-col h-full transition-all duration-200 border-r w-96 md:max-w-80 border-base-300">
       {/* Header */}
-      <div className="w-full p-4 border-b border-base-300">
-        <div className="flex items-center gap-2">
-          <Users className=" size-6" />
-          <span className="font-medium">Contacts</span>
-        </div>
-        {/* Online Users Toggle*/}
-        <div className="flex items-center gap-2 mt-3 ">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" className="checkbox checkbox-sm" />
-            <span className="text-sm">Show online only</span>
-          </label>
-          <span className="text-xs text-zinc-500">(0 online)</span>
-        </div>
+      <div className="w-full p-4 space-y-3 border-b border-base-300">
         {/* Search Input */}
-        <div className="relative mt-3">
+        <div className="relative ">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3">
             <Search className=" size-5 text-base-content/40" />
           </div>
@@ -30,6 +18,14 @@ const SidebarSkeleton = () => {
             className="w-full pl-10 rounded-full input input-bordered input-md"
             placeholder="Start typing to find contacts..."
           />
+        </div>
+        {/* Online Users Toggle*/}
+        <div className="flex items-center gap-2">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" className="checkbox checkbox-sm" />
+            <span className="text-sm">Show online only</span>
+          </label>
+          <span className="text-xs text-zinc-500">(0 online)</span>
         </div>
       </div>
 
