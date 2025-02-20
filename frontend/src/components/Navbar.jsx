@@ -14,7 +14,7 @@ const Navbar = () => {
               to="/"
               className="flex items-center gap-2.5 hover:opacity-80 transition-all"
             >
-              <div className="flex items-center justify-center rounded-lg size-9 bg-primary/10">
+              <div className="items-center justify-center hidden rounded-lg sm:flex size-9 bg-primary/10">
                 <MessageSquare className="size-5 text-primary" />
               </div>
               <h1 className="text-xl font-bold">MessageHub</h1>
@@ -38,7 +38,10 @@ const Navbar = () => {
                   <span className="hidden sm:inline">Profile</span>
                 </Link>
 
-                <button className="flex items-center gap-2 text-red-600" onClick={logout}>
+                <button
+                  className="flex items-center gap-2 text-red-600"
+                  onClick={logout}
+                >
                   <LogOut className="size-5" />
                   <span className="hidden font-medium sm:inline">Logout</span>
                 </button>
