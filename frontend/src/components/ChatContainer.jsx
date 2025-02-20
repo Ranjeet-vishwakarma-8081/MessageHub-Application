@@ -17,7 +17,7 @@ const ChatContainer = () => {
     unsubscribeFromMessages,
   } = useChatStore();
   const { authUser } = useAuthStore();
-  const messageEndRef = useRef(null)
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     getMessages(selectedUser._id);
@@ -77,12 +77,20 @@ const ChatContainer = () => {
                 {formatMessageTime(message.createdAt)}
               </time>
             </div>
-            <div className="flex flex-col chat-bubble">
+            {/* messages */}
+            <div
+              className={`flex flex-col chat-bubble font-medium
+              ${
+                message.senderId === authUser._id
+                  ? "chat-end bg-primary text-primary-content/70"
+                  : "chat-start bg-base-300 text-base-content/70"
+              }`}
+            >
               {message.image && (
                 <img
                   src={message.image}
                   alt="Attachment"
-                  className="sm:max-w-[200px] rounded-md mb-2"
+                  className="max-w-[200px] rounded-md mb-2"
                 />
               )}
               {message.text && <p>{message.text}</p>}

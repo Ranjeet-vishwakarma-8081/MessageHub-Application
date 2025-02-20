@@ -13,13 +13,12 @@ const Sidebar = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const searchRef = useRef("");
 
-  // ✅ Wrap filterUsers inside useCallback to prevent re-creation
   const filterUsers = useCallback(() => {
     const searchTerm = searchRef.current?.value?.toLowerCase();
 
     let filtered = showOnlineOnly
-      ? users.filter((user) => onlineUsers.includes(user._id)) // Only online users
-      : users; // All users
+      ? users.filter((user) => onlineUsers.includes(user._id)) 
+      : users; 
 
     if (searchTerm) {
       filtered = filtered.filter((user) =>
@@ -87,7 +86,7 @@ const Sidebar = () => {
           </div>
           <input
             type="text"
-            className="w-full pl-10 rounded-lg input input-bordered input-sm"
+            className="w-full pl-10 rounded-full input input-bordered input-md"
             placeholder="Start typing to find contacts..."
             ref={searchRef}
             onChange={filterUsers}
@@ -136,7 +135,7 @@ const Sidebar = () => {
           ))}
       </div>
       {filteredUsers?.length === 0 ? (
-        <div className="py-4 text-sm text-center text-zinc-500">
+        <div className="pt-24 text-sm text-center text-zinc-500">
           No online user found!
         </div>
       ) : (

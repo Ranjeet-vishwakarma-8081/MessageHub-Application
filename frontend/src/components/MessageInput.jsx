@@ -88,7 +88,7 @@ const MessageInput = () => {
         <div className="flex flex-1 gap-2">
           <input
             type="text"
-            className="w-full rounded-lg input input-bordered input-md"
+            className="w-full rounded-full input input-bordered input-md"
             placeholder="Type a message..."
             value={text}
             onChange={(e) => {
@@ -106,8 +106,8 @@ const MessageInput = () => {
           />
           <button
             type="button"
-            className={`flex btn btn-circle 
-            ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+            className={`flex btn btn-circle bg-base-200
+            ${imagePreview ? "text-emerald-500" : "text-amber-600"}`}
             onClick={() => fileInputRef.current?.click()} // behind the seen It will call the input element
           >
             <Image className="size-5" />
@@ -116,7 +116,7 @@ const MessageInput = () => {
         {/* Send button */}
         <button
           type="submit"
-          className="btn btn-circle"
+          className="btn btn-circle btn-primary"
           disabled={!text.trim() && !imagePreview}
         >
           <Send className="size-5" />
