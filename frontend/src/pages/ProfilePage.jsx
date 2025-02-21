@@ -23,9 +23,9 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="h-screen pt-16 sm:pt-20">
-      <div className="h-full max-w-2xl mx-auto sm:rounded-lg bg-base-200 sm:max-h-min ">
-        <div className="px-6 py-8 space-y-6 ">
+    <div className="container h-screen max-w-2xl pt-16 mx-auto sm:pt-20 bg-base-200 sm:bg-base-100">
+      <div className="px-6 sm:rounded-lg bg-base-200">
+        <div className="space-y-6 pt-8 pb-6">
           <div className="text-center">
             <h1 className="text-2xl font-semibold">Profile</h1>
             <p className="mt-2">Your profile information</p>
@@ -56,7 +56,7 @@ const ProfilePage = () => {
                 />
               </label>
             </div>
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-zinc-600">
               {isUpdatingProfile
                 ? "Updating your profile picture..."
                 : "Click the camera icon to update your photo"}
@@ -67,7 +67,7 @@ const ProfilePage = () => {
           <div className="p-6 bg-base-300 rounded-xl">
             <div className="space-y-6 ">
               <div className="space-y-1.5">
-                <div className="flex items-center gap-2 text-sm text-zinc-400">
+                <div className="flex items-center gap-2 text-sm text-zinc-600">
                   <User className="size-4" />
                   Full Name
                 </div>
@@ -76,7 +76,7 @@ const ProfilePage = () => {
                 </p>
               </div>
               <div className="space-y-1.5">
-                <div className="flex items-center gap-2 text-sm text-zinc-400">
+                <div className="flex items-center gap-2 text-sm text-zinc-600">
                   <Mail className="size-4" /> Email Address
                 </div>
                 <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
