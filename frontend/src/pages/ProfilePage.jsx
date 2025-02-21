@@ -72,7 +72,7 @@ const ProfilePage = () => {
                   Full Name
                 </div>
                 <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
-                  {authUser?.fullName}
+                  {authUser.fullName}
                 </p>
               </div>
               <div className="space-y-1.5">
@@ -80,7 +80,7 @@ const ProfilePage = () => {
                   <Mail className="size-4" /> Email Address
                 </div>
                 <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
-                  {authUser?.email}
+                  {authUser.email}
                 </p>
               </div>
             </div>
@@ -91,7 +91,7 @@ const ProfilePage = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between py-2 border-b border-zinc-700">
                 <span>Member Since</span>
-                <span>{authUser.createdAt?.split("T")[0]}</span>
+                <span>{authUser.createdAt.split("T")[0]}</span>
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>Account Status</span>
