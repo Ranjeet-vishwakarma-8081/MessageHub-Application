@@ -14,8 +14,8 @@ const HomePage = () => {
         }`}
       >
         <div
-          className={`bg-base-100 sm:rounded-lg shadow-lg w-full max-w-96 md:max-w-5xl lg:max-w-7xl sm:h-[calc(100vh-8rem)] ${
-            !selectedUser && "h-[calc(100vh-4rem)]"
+          className={`bg-base-100 sm:rounded-lg shadow-lg w-full max-w-96 md:max-w-5xl lg:max-w-7xl sm:h-[calc(100dvh-8rem)] ${
+            !selectedUser && "h-[calc(100dvh-4rem)]"
           }`}
         >
           <div className="flex h-full overflow-hidden rounded-lg">
