@@ -21,11 +21,15 @@ const ProfilePage = () => {
       await updateProfile({ profilePic: base64Image });
     };
   };
+  const displayDate =()=>{
+      const date = new Date(authUser.createdAt);
+      return  date.toLocaleDateString("en-GB").split("/").join("-");
+  }
 
   return (
     <div className="container h-screen max-w-2xl pt-16 mx-auto sm:pt-20 bg-base-200 sm:bg-base-100">
       <div className="px-6 sm:rounded-lg bg-base-200">
-        <div className="space-y-6 pt-8 pb-6">
+        <div className="pt-8 pb-6 space-y-6">
           <div className="text-center">
             <h1 className="text-2xl font-semibold">Profile</h1>
             <p className="mt-2">Your profile information</p>
@@ -53,13 +57,14 @@ const ProfilePage = () => {
                   accept="image/*"
                   onChange={handleImageUpload}
                   disabled={isUpdatingProfile}
+                  name="profile_picture"
                 />
               </label>
             </div>
             <p className="text-sm text-zinc-600">
               {isUpdatingProfile
-                ? "Updating your profile picture..."
-                : "Click the camera icon to update your photo"}
+                ? "Setting up your new profile picture..."
+                : "Want a fresh look? Tap the camera icon to update your photo"}
             </p>
           </div>
 
@@ -67,7 +72,7 @@ const ProfilePage = () => {
           <div className="p-6 bg-base-300 rounded-xl">
             <div className="space-y-6 ">
               <div className="space-y-1.5">
-                <div className="flex items-center gap-2 text-sm text-zinc-600">
+                <div className="flex items-center gap-2 text-sm ">
                   <User className="size-4" />
                   Full Name
                 </div>
@@ -76,7 +81,7 @@ const ProfilePage = () => {
                 </p>
               </div>
               <div className="space-y-1.5">
-                <div className="flex items-center gap-2 text-sm text-zinc-600">
+                <div className="flex items-center gap-2 text-sm">
                   <Mail className="size-4" /> Email Address
                 </div>
                 <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
@@ -91,7 +96,7 @@ const ProfilePage = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between py-2 border-b border-zinc-700">
                 <span>Member Since</span>
-                <span>{authUser.createdAt.split("T")[0]}</span>
+                <span>{displayDate()}</span>
               </div>
               <div className="flex items-center justify-between py-2">
                 <span>Account Status</span>

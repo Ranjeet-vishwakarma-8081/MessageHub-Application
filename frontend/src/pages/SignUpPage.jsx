@@ -54,12 +54,13 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="text"
-                  className="w-full pl-10 input input-bordered"
+                  className="w-full pl-10 input input-bordered focus:outline-none"
                   placeholder="John Doe"
                   value={formData.fullName}
                   onChange={(e) =>
                     setFormData({ ...formData, fullName: e.target.value })
                   }
+                  name="signup_name"
                 />
               </div>
             </div>
@@ -73,12 +74,13 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type="email"
-                  className="w-full pl-10 input input-bordered"
+                  className="w-full pl-10 input input-bordered focus:outline-none"
                   placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
+                  name="signup_email"
                 />
               </div>
             </div>
@@ -92,13 +94,14 @@ const SignUpPage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="w-full pl-10 input input-bordered"
+                  className="w-full pl-10 input input-bordered focus:outline-none"
                   placeholder="........"
                   value={formData.password}
                   autoComplete="true"
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
+                  name="signup_password"
                 />
                 <button
                   type="button"

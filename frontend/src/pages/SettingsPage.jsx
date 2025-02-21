@@ -39,7 +39,7 @@ const SettingsPage = () => {
   const { theme, setTheme } = useThemeStore();
 
   return (
-    <div className="container h-screen max-w-5xl pt-16 mx-auto sm:pt-20 ">
+    <div className="container h-screen max-w-5xl pt-16 mx-auto md:pt-20 ">
       <div className="px-6 rounded-lg bg-base-200">
         <div className="pt-8 pb-6 space-y-6 ">
           <div className="flex flex-col gap-1 ">
@@ -86,17 +86,17 @@ const SettingsPage = () => {
                   <div className="p-3 border-b border-base-300 bg-base-100">
                     <div className="flex items-center gap-3">
                       <div className="flex items-center justify-center w-8 h-8 font-medium rounded-full bg-primary text-primary-content">
-                        J
+                        R
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium">John Doe</h3>
-                        <p className="text-xs text-base-content/70">Online</p>
+                        <h3 className="text-sm font-medium">Ranjeet Vishwakarma</h3>
+                        <p className="text-xs text-green-600">Online</p>
                       </div>
                     </div>
                   </div>
 
                   {/* Chat Messages */}
-                  <div className="p-4 space-y-4 min-h-[200px] max-h-fit overflow-y-auto bg-base-100">
+                  <div className="p-4 space-y-4 min-h-[180px] max-h-fit overflow-y-auto bg-base-100">
                     {PREVIEW_MESSAGES.map((message) => (
                       <div
                         key={message.id}
@@ -137,10 +137,10 @@ const SettingsPage = () => {
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
-                        className="flex-1 w-full rounded-full input input-bordered input-md"
-                        placeholder="Type a message..."
-                        value="This is a preview"
+                        className="flex-1 w-full rounded-full input input-bordered input-md focus:outline-none"
+                        placeholder="Type a message"
                         readOnly
+                        name="preview_input"
                       />
                       <button
                         type="button"

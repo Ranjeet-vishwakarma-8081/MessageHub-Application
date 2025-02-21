@@ -9,7 +9,7 @@ const Navbar = () => {
   return (
     <header
       className={`fixed top-0 z-40 w-full border-b bg-base-100 border-base-300 backdrop-blur-lg bg-base-100/80 ${
-        selectedUser && "hidden sm:block "
+        authUser && selectedUser && "hidden sm:block "
       }`}
     >
       <div className="container h-16 px-4 mx-auto">

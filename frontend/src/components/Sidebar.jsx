@@ -64,10 +64,11 @@ const Sidebar = () => {
           </div>
           <input
             type="text"
-            className="w-full pl-10 rounded-full input input-bordered input-md"
-            placeholder="Start typing to find contacts..."
+            className="w-full pl-10 rounded-full input input-bordered input-md focus:outline-none placeholder:text-xs sm:placeholder:text-sm"
+            placeholder="Start typing to find contacts"
             ref={searchRef}
             onChange={filterUsers}
+            name="search"
           />
         </div>
         {/* Online Users Toggle*/}
@@ -81,6 +82,7 @@ const Sidebar = () => {
                 filterUsers(); // Apply filter when toggled
               }}
               className="checkbox checkbox-sm"
+              name="checkbox"
             />
             <span className="text-sm">Show online only</span>
           </label>

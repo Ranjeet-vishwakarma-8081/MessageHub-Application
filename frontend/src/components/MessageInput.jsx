@@ -92,7 +92,7 @@ const MessageInput = () => {
         <div className="flex flex-1 gap-2">
           <input
             type="text"
-            className="w-full rounded-full input input-bordered input-md"
+            className="w-full rounded-full input input-bordered input-md focus:outline-none"
             placeholder="Type a message..."
             value={text}
             onChange={(e) => {
@@ -100,6 +100,7 @@ const MessageInput = () => {
               handleTyping();
             }}
             onBlur={handleStopTyping} // When user clicks away
+            name="message_input"
           />
           <input
             type="file"
@@ -107,6 +108,7 @@ const MessageInput = () => {
             className="hidden"
             ref={fileInputRef}
             onChange={handleImageChange}
+            name="pick_image"
           />
           <button
             type="button"

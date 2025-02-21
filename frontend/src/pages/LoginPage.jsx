@@ -46,12 +46,13 @@ const Loginpage = () => {
                 </div>
                 <input
                   type="email"
-                  className="w-full pl-10 input input-bordered"
+                  className="w-full pl-10 input input-bordered focus:outline-none"
                   placeholder="you@example.com"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
+                  name="login_email"
                 />
               </div>
             </div>
@@ -65,13 +66,14 @@ const Loginpage = () => {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className="w-full pl-10 input input-bordered"
+                  className="w-full pl-10 input input-bordered focus:outline-none"
                   value={formData.password}
                   placeholder="........"
                   autoComplete="true"
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
+                  name="login_password"
                 />
                 <button
                   type="button"
