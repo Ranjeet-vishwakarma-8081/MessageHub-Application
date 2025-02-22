@@ -9,6 +9,7 @@ import { formatMessageTime } from "../lib/utils.js";
 
 const ChatContainer = () => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState("100vh");
 
   const {
     messages,
@@ -47,7 +48,21 @@ const ChatContainer = () => {
     return () =>
       window.visualViewport?.removeEventListener("resize", handleResize);
   }, []);
+  useEffect(() => {
+    const updateHeight = () => {
+      const isSmallScreen = window.innerWidth < 640; 
+      if (isSmallScreen) {
+        setViewportHeight(`calc(100vh - ${keyboardHeight}px)`);
+      } else {
+        setViewportHeight("100vh");
+      }
+    };
 
+    window.addEventListener("resize", updateHeight);
+    updateHeight(); // Call on mount
+
+    return () => window.removeEventListener("resize", updateHeight);
+  }, [keyboardHeight]);
   if (isMessagesLoading) {
     return (
       <div className="flex flex-col flex-1 pt-16 overflow-auto h-dvh sm:pt-0 sm:h-full">
@@ -62,7 +77,7 @@ const ChatContainer = () => {
     <div
       className="flex flex-col flex-1 overflow-auto "
       style={{
-        height: keyboardHeight ? `calc(100vh - ${keyboardHeight}px)` : "100vh",
+        height:viewportHeight,
       }}
     >
       {/* Chat header */}
