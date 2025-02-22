@@ -50,11 +50,12 @@ const ChatContainer = () => {
   }, []);
   useEffect(() => {
     const updateHeight = () => {
-      const isSmallScreen = window.innerWidth < 640; 
+      const isSmallScreen = window.innerWidth < 640;
       if (isSmallScreen) {
-        setViewportHeight(`calc(100vh - ${keyboardHeight}px)`);
+        // setViewportHeight(`calc(100vh - ${keyboardHeight}px)`);
+        setViewportHeight(keyboardHeight ? 'calc(100vh - ${keyboardHeight}px)' : "100vh");
       } else {
-        setViewportHeight("100vh");
+        setViewportHeight("");
       }
     };
 
