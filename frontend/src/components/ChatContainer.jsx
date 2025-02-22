@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
 
@@ -8,6 +8,8 @@ import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { formatMessageTime } from "../lib/utils.js";
 
 const ChatContainer = () => {
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
   const {
     messages,
     getMessages,
@@ -33,6 +35,19 @@ const ChatContainer = () => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      const visualViewportHeight =
+        window.visualViewport?.height || window.innerHeight;
+      const keyboardHeight = window.innerHeight - visualViewportHeight;
+      setKeyboardHeight(keyboardHeight);
+    };
+
+    window.visualViewport?.addEventListener("resize", handleResize);
+    return () =>
+      window.visualViewport?.removeEventListener("resize", handleResize);
+  }, []);
+
   if (isMessagesLoading) {
     return (
       <div className="flex flex-col flex-1 pt-16 overflow-auto h-dvh sm:pt-0 sm:h-full">
@@ -44,7 +59,12 @@ const ChatContainer = () => {
   }
 
   return (
-    <div className="flex flex-col flex-1 overflow-auto ">
+    <div
+      className="flex flex-col flex-1 overflow-auto "
+      style={{
+        height: keyboardHeight ? `calc(100vh - ${keyboardHeight}px)` : "100vh",
+      }}
+    >
       {/* Chat header */}
       <ChatHeader />
 
@@ -99,7 +119,7 @@ const ChatContainer = () => {
         ))}
       </div>
       {/* Message Input */}
-      <MessageInput />
+      <MessageInput keyboardHeight={keyboardHeight} />
     </div>
   );
 };

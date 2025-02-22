@@ -3,8 +3,9 @@ import useChatStore from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import useAuthStore from "../store/useAuthStore";
+import PropTypes from "prop-types";
 
-const MessageInput = () => {
+const MessageInput = ({ keyboardHeight }) => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
@@ -68,6 +69,7 @@ const MessageInput = () => {
       className={`${
         selectedUser && " fixed sm:static inset-x-0 bottom-0 bg-base-100 "
       } w-full p-3 pb-3`}
+      style={{ bottom: `${keyboardHeight}px` }} // Adjust for keyboard height
     >
       {imagePreview && (
         <div className="flex items-center gap-2 mb-3">
@@ -130,6 +132,10 @@ const MessageInput = () => {
       </form>
     </div>
   );
+};
+
+MessageInput.propTypes = {
+  keyboardHeight: PropTypes.number,
 };
 
 export default MessageInput;
