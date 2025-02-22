@@ -53,7 +53,7 @@ const Sidebar = () => {
     <aside
       className={`${
         selectedUser ? "hidden md:flex " : "flex"
-      } flex-col h-full transition-all duration-200 border-r w-96 md:max-w-80 border-base-300`}
+      } flex-col h-full transition-all duration-200 md:border-r w-96 md:max-w-80 border-base-300`}
     >
       {/* Header */}
       <div className="w-full p-4 space-y-3 border-b border-base-300">
