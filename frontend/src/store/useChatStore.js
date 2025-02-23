@@ -9,6 +9,10 @@ const useChatStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
+  viewportHeight:"100vh",
+  setViewportHeight:(vh)=>{
+    set({viewportHeight:vh})
+  },
 
   getUsers: async () => {
     set({ isUsersLoading: true });
