@@ -5,14 +5,9 @@ import ChatContainer from "../components/ChatContainer";
 import useChatStore from "../store/useChatStore";
 
 const HomePage = () => {
-  const { selectedUser, viewportHeight } = useChatStore();
+  const { selectedUser } = useChatStore();
   return (
-    <div
-      className="w-full sm:h-screen bg-base-200"
-      style={{
-        height: viewportHeight === "100vh" ? "" : viewportHeight,
-      }}
-    >
+    <div className="w-full sm:h-screen bg-base-200">
       <div
         className={`flex items-center justify-center sm:pt-20 md:px-4 ${
           !selectedUser && "pt-16"

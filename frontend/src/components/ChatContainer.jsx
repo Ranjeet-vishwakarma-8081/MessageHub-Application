@@ -10,6 +10,7 @@ import { Lock } from "lucide-react";
 
 const ChatContainer = () => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [viewportHeight, setViewportHeight] = useState("100vh");
 
   const {
     messages,
@@ -18,8 +19,6 @@ const ChatContainer = () => {
     selectedUser,
     subscribeToMessages,
     unsubscribeFromMessages,
-    viewportHeight,
-    setViewportHeight
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
@@ -67,7 +66,7 @@ const ChatContainer = () => {
     updateHeight(); // Call on mount
 
     return () => window.removeEventListener("resize", updateHeight);
-  }, [keyboardHeight,setViewportHeight]);
+  }, [keyboardHeight]);
   if (isMessagesLoading) {
     return (
       <div className="flex flex-col flex-1 pt-16 overflow-auto h-dvh sm:pt-0 sm:h-full">
