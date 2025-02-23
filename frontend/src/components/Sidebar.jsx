@@ -141,14 +141,21 @@ const Sidebar = () => {
           No online user found!
         </div>
       ) : (
-        <div className="px-8 py-6 text-zinc-500 ">
-          <div className="flex justify-center">
-            <Lock size="13" />
-            <div className="pl-1 text-xs text-center">
-              Your personal messages are{" "}
-              <span className="text-green-600 text-bold">
-                end-to-end encrypted.
-              </span>
+        <div className="px-8 py-6">
+          <div
+            className="flex justify-center items-center text-gray-700
+          "
+          >
+            <div className="relative">
+              <div>
+                <Lock className="size-3 absolute left-0 top-0" />
+              </div>
+              <p className="text-xs">
+                &nbsp; &nbsp; &nbsp;Your personal messages are{" "}
+                <span className="text-green-600 text-bold">
+                  end-to-end encrypted.
+                </span>
+              </p>
             </div>
           </div>
         </div>

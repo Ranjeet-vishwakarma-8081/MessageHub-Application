@@ -6,6 +6,7 @@ import ChatHeader from "./ChatHeader.jsx";
 import MessageInput from "./MessageInput.jsx";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { formatMessageTime } from "../lib/utils.js";
+import { Lock } from "lucide-react";
 
 const ChatContainer = () => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -53,7 +54,9 @@ const ChatContainer = () => {
       const isSmallScreen = window.innerWidth < 640;
       if (isSmallScreen) {
         // setViewportHeight(`calc(100vh - ${keyboardHeight}px)`);
-        setViewportHeight(keyboardHeight ? 'calc(100vh - ${keyboardHeight}px)' : "100vh");
+        setViewportHeight(
+          keyboardHeight ? "calc(100vh - ${keyboardHeight}px)" : "100vh"
+        );
       } else {
         setViewportHeight("");
       }
@@ -78,14 +81,26 @@ const ChatContainer = () => {
     <div
       className="flex flex-col flex-1 overflow-auto "
       style={{
-        height:viewportHeight,
+        height: viewportHeight,
       }}
     >
       {/* Chat header */}
       <ChatHeader />
 
       {/* Chat Messages */}
-      <div className="flex-1 p-4 my-16 space-y-4 overflow-y-auto sm:my-0">
+      <div className="flex-1 p-4 my-16 space-y-4 overflow-y-auto sm:my-0 ">
+        <div className="w-4/5 md:w-3/5 px-2 py-1 mx-auto rounded-lg bg-base-300">
+          <div className="relative text-gray-700">
+            <div>
+              <Lock className="size-3 absolute left-0 top-0" />
+            </div>
+            <p className="text-xs ">
+              &nbsp; &nbsp; &nbsp;To maintain your privacy, all communications
+              on MessageHub are encrypted end-to-end, ensuring that no third
+              party, including MessageHub, can intercept them.
+            </p>
+          </div>
+        </div>
         {messages.map((message) => (
           <div
             key={message._id}
