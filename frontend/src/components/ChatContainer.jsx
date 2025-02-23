@@ -88,9 +88,14 @@ const ChatContainer = () => {
       <ChatHeader />
 
       {/* Chat Messages */}
-      <div className="flex-1 p-4 my-16 space-y-4 overflow-y-auto sm:my-0 ">
+      <div
+        className="flex-1 p-4 my-16 space-y-4 overflow-y-auto sm:my-0 "
+        style={{
+          paddingBottom: keyboardHeight ? "80px" : "",
+        }}
+      >
         {/* Encryption message */}
-        <div className="w-4/5 md:w-3/5 px-2 py-1 mx-auto rounded-lg bg-base-300">
+        <div className="w-4/5 md:w-3/5 px-2 py-1 mx-auto rounded-lg bg-base-300 ">
           <div className="relative text-gray-700">
             <div>
               <Lock className="size-3 absolute left-0 top-0" />
