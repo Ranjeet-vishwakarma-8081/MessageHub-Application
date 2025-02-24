@@ -95,10 +95,10 @@ const ChatContainer = () => {
         }}
       >
         {/* Encryption message */}
-        <div className="w-4/5 md:w-3/5 px-2 py-1 mx-auto rounded-lg bg-base-300 ">
+        <div className="w-4/5 px-2 py-1 mx-auto rounded-lg md:w-3/5 bg-base-300 ">
           <div className="relative text-gray-700">
             <div>
-              <Lock className="size-3 absolute left-0 top-0" />
+              <Lock className="absolute top-0 left-0 size-3" />
             </div>
             <p className="text-xs ">
               &nbsp; &nbsp; &nbsp;To maintain your privacy, all communications

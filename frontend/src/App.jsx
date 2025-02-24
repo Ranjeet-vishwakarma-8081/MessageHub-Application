@@ -12,6 +12,8 @@ import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
+import CapturePhoto from "./components/CapturePhoto";
+import useChatStore from "./store/useChatStore";
 
 const App = () => {
   const {
@@ -22,6 +24,7 @@ const App = () => {
     // onlineUsers
   } = useAuthStore();
   const { theme } = useThemeStore();
+  const { selectedUser } = useChatStore();
   // console.log({ onlineUsers });
 
   // When app loads, It checks if the current user is authenticated or not.
@@ -62,6 +65,17 @@ const App = () => {
           exact
           path="/"
           element={authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          exact
+          path="/capture-photo"
+          element={
+            authUser && selectedUser ? (
+              <CapturePhoto />
+            ) : (
+              <Navigate to={"/login"} />
+            )
+          }
         />
         <Route
           exact

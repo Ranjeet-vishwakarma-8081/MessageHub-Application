@@ -1,16 +1,17 @@
 import { useRef, useState } from "react";
 import useChatStore from "../store/useChatStore";
-import { Image, Send, X } from "lucide-react";
+import { Camera, Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 import useAuthStore from "../store/useAuthStore";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const MessageInput = ({ keyboardHeight }) => {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const { socket, authUser } = useAuthStore();
-  const { sendMessage, selectedUser } = useChatStore();
+  const { sendMessage, selectedUser, setSelectedCamera } = useChatStore();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -64,6 +65,10 @@ const MessageInput = ({ keyboardHeight }) => {
     socket.emit("stopTyping", { receiverId });
   };
 
+  const handleCamera = () => {
+    setSelectedCamera(true);
+  };
+
   return (
     <div
       className={`${
@@ -92,18 +97,28 @@ const MessageInput = ({ keyboardHeight }) => {
       {/* Form for handling the input messages */}
       <form className="flex items-center gap-2" onSubmit={handleSendMessage}>
         <div className="flex flex-1 gap-2">
-          <input
-            type="text"
-            className="w-full rounded-full input input-bordered input-md focus:outline-none"
-            placeholder="Type a message..."
-            value={text}
-            onChange={(e) => {
-              setText(e.target.value);
-              handleTyping();
-            }}
-            onBlur={handleStopTyping} // When user clicks away
-            name="message_input"
-          />
+          <div className="relative w-full">
+            <div
+              className="absolute inset-y-0 right-0 flex items-center pr-3"
+              onClick={handleCamera}
+            >
+              <Link to={"/capture-photo"}>
+                <Camera className="size-5 text-base-content/50" />
+              </Link>
+            </div>
+            <input
+              type="text"
+              className="w-full rounded-full input input-bordered input-md focus:outline-none"
+              placeholder="Type a message"
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value);
+                handleTyping();
+              }}
+              onBlur={handleStopTyping} // When user clicks away
+              name="message_input"
+            />
+          </div>
           <input
             type="file"
             accept="image/*"

@@ -9,6 +9,10 @@ const useChatStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
+  selectedCamera: false,
+  setSelectedCamera:(cameraValue)=>{
+    set({ selectedCamera: cameraValue });
+  },
 
   getUsers: async () => {
     set({ isUsersLoading: true });
