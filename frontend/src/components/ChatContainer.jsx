@@ -96,11 +96,11 @@ const ChatContainer = () => {
       >
         {/* Encryption message */}
         <div className="w-4/5 px-2 py-1 mx-auto rounded-lg md:w-3/5 bg-base-300 ">
-          <div className="relative text-gray-700">
+          <div className="relative text-zinc-500">
             <div>
               <Lock className="absolute top-0 left-0 size-3" />
             </div>
-            <p className="text-xs ">
+            <p className="text-xs font-medium">
               &nbsp; &nbsp; &nbsp;To maintain your privacy, all communications
               on MessageHub are encrypted end-to-end, ensuring that no third
               party, including MessageHub, can intercept them.
