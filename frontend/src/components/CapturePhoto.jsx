@@ -18,16 +18,28 @@ const CapturePhoto = () => {
     setImagePreview(imageSrc); // Directly set the image source
     setHasImage(true);
   };
+
   const switchCamera = () => {
+    setIsLoading(true);
     setFacingMode((prevMode) => (prevMode === "user" ? "environment" : "user"));
+    // Restart the webcam stream after a slight delay
+    setTimeout(() => {
+      webcamRef.current?.video?.srcObject
+        ?.getTracks()
+        .forEach((track) => track.stop());
+      setIsLoading(false);
+    }, 500);
   };
+
   const handleUserMedia = () => {
-    setIsLoading(false); // Webcam is ready
+    setTimeout(() => setIsLoading(false), 200); // Webcam is ready
   };
+
   const handleUserMediaError = () => {
     setIsLoading(false); //stop loading even if there is any error
     toast.error("Unable to access Camera, please check permissions");
   };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file.type.startsWith("image/")) {
@@ -43,35 +55,34 @@ const CapturePhoto = () => {
   };
 
   return (
-    <div className=" h-screen pt-16 relative bg-black space-y-3 text-white">
+    <div className="relative h-screen pt-16 space-y-3 text-white bg-black ">
       {hasImage && <Navigate to={"/"} />}
       {/* Close button */}
-      <div className="py-3 px-8">
+      <div className="px-8 py-3">
         <Link to={"/"}>
           <X className="size-6 " />
         </Link>
       </div>
       {/* Loading spinner */}
       {isLoading && (
-        <div className="flex items-center justify-center h-96 w-full">
-          <Loader className="size-15 animate-spin text-white" />
+        <div className="flex items-center justify-center w-full h-96">
+          <Loader className="text-white size-15 animate-spin" />
         </div>
       )}
       {/* Webcam component */}
       <Webcam
+        key={facingMode}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
         videoConstraints={{
           facingMode,
-          height: 1920,
-          width: 1080,
         }}
         onUserMedia={handleUserMedia} // Called when webcam is ready.
         onUserMediaError={handleUserMediaError}
-        className={`w-full h-96  ${isLoading ? "hidden" : "block"}`}
+        className={`w-full h-96 bg-blue-500 ${isLoading ? "hidden" : "block"}`}
       />
       {/* Controls */}
-      <div className="flex justify-between items-center py-3 px-8 absolute w-full inset-x-0 bottom-16 ">
+      <div className="absolute inset-x-0 flex items-center justify-between w-full px-8 py-3 bottom-16 ">
         {/* Gallery*/}
         <div>
           <input
