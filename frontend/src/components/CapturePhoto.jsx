@@ -22,13 +22,6 @@ const CapturePhoto = () => {
   const switchCamera = () => {
     setIsLoading(true);
     setFacingMode((prevMode) => (prevMode === "user" ? "environment" : "user"));
-    // Restart the webcam stream after a slight delay
-    setTimeout(() => {
-      webcamRef.current?.video?.srcObject
-        ?.getTracks()
-        .forEach((track) => track.stop());
-      setIsLoading(false);
-    }, 500);
   };
 
   const handleUserMedia = () => {
@@ -65,7 +58,7 @@ const CapturePhoto = () => {
       </div>
       {/* Loading spinner */}
       {isLoading && (
-        <div className="flex items-center justify-center w-full h-96">
+        <div className="flex items-center justify-center w-full h-[calc(100vh-128px)]">
           <Loader className="text-white size-15 animate-spin" />
         </div>
       )}
@@ -79,7 +72,7 @@ const CapturePhoto = () => {
         }}
         onUserMedia={handleUserMedia} // Called when webcam is ready.
         onUserMediaError={handleUserMediaError}
-        className={`w-full h-96 bg-blue-500 ${isLoading ? "hidden" : "block"}`}
+        className={`${isLoading ? "hidden" : ""}`}
       />
       {/* Controls */}
       <div className="absolute inset-x-0 flex items-center justify-between w-full px-8 py-3 bottom-16 ">
