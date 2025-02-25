@@ -8,10 +8,15 @@ import { Link } from "react-router-dom";
 
 const MessageInput = ({ keyboardHeight }) => {
   const [text, setText] = useState("");
-  const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
   const { socket, authUser } = useAuthStore();
-  const { sendMessage, selectedUser, setSelectedCamera } = useChatStore();
+  const {
+    sendMessage,
+    selectedUser,
+    setSelectedCamera,
+    imagePreview,
+    setImagePreview,
+  } = useChatStore();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
