@@ -10,6 +10,10 @@ const useChatStore = create((set, get) => ({
   isUsersLoading: false,
   isMessagesLoading: false,
   selectedCamera: false,
+  imagePreview:null,
+  setImagePreview:(image)=>{
+    set({ imagePreview: image });
+  },
   setSelectedCamera:(cameraValue)=>{
     set({ selectedCamera: cameraValue });
   },
