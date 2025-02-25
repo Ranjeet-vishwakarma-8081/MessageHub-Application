@@ -48,17 +48,17 @@ const CapturePhoto = () => {
   };
 
   return (
-    <div className="relative h-screen pt-16 space-y-3 text-white bg-black ">
+    <div className="relative h-screen pt-12 space-y-3 text-white bg-black ">
       {hasImage && <Navigate to={"/"} />}
       {/* Close button */}
-      <div className="px-8 py-3">
+      <div className="px-8 py-2">
         <Link to={"/"}>
           <X className="size-6 " />
         </Link>
       </div>
       {/* Loading spinner */}
       {isLoading && (
-        <div className="flex items-center justify-center w-full h-[calc(100vh-128px)]">
+        <div className="flex items-center justify-center w-full h-[calc(100vh-200px)]">
           <Loader className="text-white size-15 animate-spin" />
         </div>
       )}
