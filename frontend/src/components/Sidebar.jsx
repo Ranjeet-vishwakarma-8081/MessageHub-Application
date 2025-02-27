@@ -114,7 +114,7 @@ const Sidebar = () => {
                   className="object-cover rounded-full size-12"
                 />
                 {onlineUsers.includes(user._id) && (
-                  <span className="absolute bottom-0 right-0 bg-green-600 rounded-full ring-2 size-3 ring-zinc-900" />
+                  <span className="absolute bg-green-600 rounded-full -bottom-1 -right-1 ring-1 size-3 ring-zinc-200" />
                 )}
               </div>
               {/* User info */}
@@ -143,12 +143,11 @@ const Sidebar = () => {
       ) : (
         <div className="px-8 py-6">
           <div
-            className="flex justify-center items-center text-gray-700
-          "
+            className="flex items-center justify-center text-gray-700 "
           >
             <div className="relative">
               <div>
-                <Lock className="size-3 absolute left-0 top-0" />
+                <Lock className="absolute top-0 left-0 size-3" />
               </div>
               <p className="text-xs">
                 &nbsp; &nbsp; &nbsp;Your personal messages are{" "}
