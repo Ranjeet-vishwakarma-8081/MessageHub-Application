@@ -41,7 +41,7 @@ const ChatHeader = () => {
                 </span>
               ) : (
                 <span className="text-zinc-400">
-                  last seen at {formatMessageTime(new Date())}
+                  last seen at {formatMessageTime(selectedUser.lastSeen)}
                 </span>
               )}
             </p>

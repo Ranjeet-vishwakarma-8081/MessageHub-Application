@@ -1,6 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import User from "../models/user.model.js";
 
 const app = express();
 const server = createServer(app);
@@ -38,10 +39,15 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("disconnect", () => {
-    console.log(`User disconnected: ${userId}`);
+  socket.on("disconnect", async (reason) => {
     delete userSocketMap[userId];
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
+    io.emit("getOnlineUsers", Object.keys(userSocketMap)); //Notify others that who is online now
+    try {
+      await User.findByIdAndUpdate(userId, { lastSeen: new Date() });
+    } catch (e) {
+      console.log("Error in updating lastseen during disconnection: ", e);
+    }
+    console.log(`User disconnected: ${userId}, Reason: ${reason}`);
   });
 });
 
