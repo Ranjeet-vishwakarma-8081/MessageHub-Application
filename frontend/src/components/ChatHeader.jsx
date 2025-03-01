@@ -2,10 +2,29 @@ import { ArrowLeft, X } from "lucide-react";
 import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/utils";
+import { useEffect, useState } from "react";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
-  const { onlineUsers, msgSenderName } = useAuthStore();
+  const { onlineUsers, msgSenderName, socket } = useAuthStore();
+  const [lastSeen, setLastSeen] = useState(null);
+
+  useEffect(() => {
+    // Fetch lastSeen from the selectedUser
+    setLastSeen(formatMessageTime(selectedUser.lastSeen));
+
+    // Listen for real-time update lastSeen
+    socket.on("update-last-seen", ({ userId: updatedUserId, lastSeen }) => {
+      console.log("Updated userId -", updatedUserId);
+      console.log("Updated User lastSeen -", lastSeen);
+      if (updatedUserId === selectedUser._id)
+        setLastSeen(formatMessageTime(lastSeen));
+    });
+
+    return () => {
+      socket.off("update-last-seen");
+    };
+  }, [selectedUser, socket]);
 
   return (
     <div
@@ -40,9 +59,7 @@ const ChatHeader = () => {
                   {msgSenderName} is typing...
                 </span>
               ) : (
-                <span className="text-zinc-400">
-                  last seen at {formatMessageTime(selectedUser.lastSeen)}
-                </span>
+                <span className="text-zinc-400">last seen at {lastSeen}</span>
               )}
             </p>
           </div>

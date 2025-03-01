@@ -43,9 +43,11 @@ io.on("connection", (socket) => {
     delete userSocketMap[userId];
     io.emit("getOnlineUsers", Object.keys(userSocketMap)); //Notify others that who is online now
     try {
-      await User.findByIdAndUpdate(userId, { lastSeen: new Date() });
-    } catch (e) {
-      console.log("Error in updating lastseen during disconnection: ", e);
+      const lastSeen = new Date();
+      await User.findByIdAndUpdate(userId, { lastSeen });
+      io.emit("update-last-seen", { userId, lastSeen });
+    } catch (err) {
+      console.log("Error in updating lastseen during disconnection: ", err);
     }
     console.log(`User disconnected: ${userId}, Reason: ${reason}`);
   });
