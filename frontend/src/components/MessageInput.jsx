@@ -104,10 +104,10 @@ const MessageInput = ({ keyboardHeight }) => {
         <div className="flex flex-1 gap-2">
           <div className="relative w-full">
             <div
-              className="absolute inset-y-0 right-0 flex items-center pr-3"
+              className="absolute inset-y-0 right-0 flex items-center pr-3 sm:hidden"
               onClick={handleCamera}
             >
-              <Link to={"/capture-photo"}>
+              <Link to="/chat-container/capture-photo">
                 <Camera className="size-5 text-base-content/50" />
               </Link>
             </div>
