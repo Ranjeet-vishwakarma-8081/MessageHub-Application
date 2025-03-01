@@ -3,9 +3,12 @@ import NoChatSelected from "../components/NoChatSelected";
 import ChatContainer from "../components/ChatContainer";
 
 import useChatStore from "../store/useChatStore";
+import { Navigate } from "react-router-dom";
 
 const HomePage = () => {
   const { selectedUser } = useChatStore();
+  const isInnerWidthSm = window.innerWidth < 640;
+
   return (
     <div className="w-full sm:h-screen bg-base-200">
       <div
@@ -22,8 +25,10 @@ const HomePage = () => {
             <Sidebar />
             {!selectedUser ? (
               <NoChatSelected /> // This is the default Placeholder for the user
-            ) : (
+            ) : !isInnerWidthSm ? (
               <ChatContainer />
+            ) : (
+              <Navigate to="/chat-container" />
             )}
           </div>
         </div>

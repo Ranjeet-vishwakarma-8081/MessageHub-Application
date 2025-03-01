@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
@@ -14,8 +14,10 @@ import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import CapturePhoto from "./components/CapturePhoto";
 import useChatStore from "./store/useChatStore";
+import MobileChatContainer from "./pages/MobileChatContainer";
 
 const App = () => {
+  const location = useLocation();
   const {
     authUser,
     // message,
@@ -24,8 +26,13 @@ const App = () => {
     // onlineUsers
   } = useAuthStore();
   const { theme } = useThemeStore();
-  const { selectedUser } = useChatStore();
+  const { selectedUser, setSelectedUser } = useChatStore();
   // console.log({ onlineUsers });
+
+  // Reset selectedUser, when navigating back to home page
+  useEffect(() => {
+    if (location.pathname === "/") setSelectedUser(null);
+  }, [location.pathname, setSelectedUser]);
 
   // When app loads, It checks if the current user is authenticated or not.
   useEffect(() => {
@@ -68,12 +75,23 @@ const App = () => {
         />
         <Route
           exact
-          path="/capture-photo"
+          path="/chat-container"
+          element={
+            authUser && selectedUser ? (
+              <MobileChatContainer />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          exact
+          path="/chat-container/capture-photo"
           element={
             authUser && selectedUser ? (
               <CapturePhoto />
             ) : (
-              <Navigate to={"/login"} />
+              <Navigate to={"/chat-container"} />
             )
           }
         />
