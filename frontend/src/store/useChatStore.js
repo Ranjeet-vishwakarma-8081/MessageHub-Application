@@ -10,11 +10,23 @@ const useChatStore = create((set, get) => ({
   isUsersLoading: false,
   isMessagesLoading: false,
   selectedCamera: false,
-  imagePreview:null,
-  setImagePreview:(image)=>{
+  imagePreview: null,
+
+  newMessageSenderId: null,
+  messageCounter: 0,
+  setMessageCounter: (counter, reset = false) => {
+    set((prevCount) => ({
+      messageCounter: reset ? 0 : prevCount.messageCounter + counter,
+    }));
+  },
+  setNewMessageSenderId: (messageSenderId) => {
+    set({ newMessageSenderId: messageSenderId });
+  },
+
+  setImagePreview: (image) => {
     set({ imagePreview: image });
   },
-  setSelectedCamera:(cameraValue)=>{
+  setSelectedCamera: (cameraValue) => {
     set({ selectedCamera: cameraValue });
   },
 

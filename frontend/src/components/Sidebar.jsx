@@ -5,13 +5,35 @@ import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
-    useChatStore();
+  const {
+    getUsers,
+    users,
+    selectedUser,
+    setSelectedUser,
+    isUsersLoading,
+    messageCounter,
+    setMessageCounter,
+    newMessageSenderId,
+    setNewMessageSenderId,
+  } = useChatStore();
   const { onlineUsers, socket, setMsgSenderName, msgSenderName } =
     useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const searchRef = useRef("");
+
+  useEffect(() => {
+    !selectedUser
+      ? socket.on("newMessage", (newMessage) => {
+          setMessageCounter(1);
+          setNewMessageSenderId(newMessage.senderId);
+        })
+      : setMessageCounter(0, true);
+
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [setMessageCounter, setNewMessageSenderId, socket, selectedUser]);
 
   const filterUsers = useCallback(() => {
     const searchTerm = searchRef.current?.value?.toLowerCase();
@@ -99,7 +121,7 @@ const Sidebar = () => {
               key={user._id}
               onClick={() => setSelectedUser(user)}
               className={`
-                p-3 gap-3 w-full flex hover:bg-base-300 transition-colors max-h-16 ${
+                p-3 gap-3 w-full flex hover:bg-base-300 transition-colors max-h-16 relative ${
                   selectedUser?._id === user._id
                     ? " bg-base-200 ring-1 ring-base-300"
                     : ""
@@ -133,6 +155,17 @@ const Sidebar = () => {
                   )}
                 </div>
               </div>
+
+              {/* Notification counter */}
+              {!selectedUser &&
+                messageCounter >= 1 &&
+                user._id === newMessageSenderId && (
+                  <div className="absolute inset-y-0 flex items-center right-5">
+                    <div className="px-2 py-1 text-xs font-medium text-black bg-green-500 rounded-full">
+                      {messageCounter}
+                    </div>
+                  </div>
+                )}
             </button>
           ))}
       </div>
@@ -142,9 +175,7 @@ const Sidebar = () => {
         </div>
       ) : (
         <div className="px-8 py-6">
-          <div
-            className="flex items-center justify-center text-gray-700 "
-          >
+          <div className="flex items-center justify-center text-gray-700 ">
             <div className="relative">
               <div>
                 <Lock className="absolute top-0 left-0 size-3" />
