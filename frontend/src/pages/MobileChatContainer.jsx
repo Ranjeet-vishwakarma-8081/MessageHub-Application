@@ -20,8 +20,19 @@ const MobileChatContainer = () => {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-  const { authUser } = useAuthStore();
+  const { authUser, socket, setMsgSenderName } = useAuthStore();
   const messageEndRef = useRef(null);
+
+  // Handle User typing messages
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("userTyping", ({ senderName }) => setMsgSenderName(senderName));
+    socket.on("userStoppedTyping", () => setMsgSenderName(""));
+    return () => {
+      socket.off("userTyping");
+      socket.off("userStoppedTyping");
+    };
+  }, [socket, setMsgSenderName]);
 
   useEffect(() => {
     getMessages(selectedUser._id);
