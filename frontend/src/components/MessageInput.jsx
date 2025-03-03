@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 const MessageInput = ({ keyboardHeight }) => {
   const [text, setText] = useState("");
   const fileInputRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
   const { socket, authUser } = useAuthStore();
   const {
     sendMessage,
@@ -53,15 +54,17 @@ const MessageInput = ({ keyboardHeight }) => {
       console.error("Failed to send message -", error.message);
     }
   };
-  let typingTimeout;
   const handleTyping = () => {
-    clearTimeout(typingTimeout);
     const receiverId = selectedUser._id;
     const senderName = authUser.fullName.split(" ")[0];
 
+    // Emit typing event immediately
     socket.emit("typing", { receiverId, senderName });
-    // Stop typing automatically after 2 seconds of inactivity
-    typingTimeout = setTimeout(() => {
+
+    // clear any existing typing timeout
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
+    // Set a new timeout to emit stopTyping after 2 seconds of inactivity
+    typingTimeoutRef.current = setTimeout(() => {
       socket.emit("stopTyping", { receiverId });
     }, 2000);
   };
