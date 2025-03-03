@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
-  const { onlineUsers, msgSenderName, socket } = useAuthStore();
+  const { onlineUsers, socket } = useAuthStore();
   const [lastSeen, setLastSeen] = useState(null);
 
   useEffect(() => {
@@ -49,13 +49,8 @@ const ChatHeader = () => {
           <div className="pl-3">
             <h3 className="font-medium">{selectedUser.fullName}</h3>
             <p className="text-sm">
-              {onlineUsers.includes(selectedUser._id) &&
-              selectedUser.fullName.split(" ")[0] !== msgSenderName ? (
+              {onlineUsers.includes(selectedUser._id) ? (
                 <span className="text-green-600">Online</span>
-              ) : selectedUser.fullName.split(" ")[0] === msgSenderName ? (
-                <span className="text-green-600">
-                  {msgSenderName} is typing...
-                </span>
               ) : (
                 <span className="text-zinc-400">last seen at {lastSeen}</span>
               )}

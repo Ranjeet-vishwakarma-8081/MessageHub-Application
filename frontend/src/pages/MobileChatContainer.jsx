@@ -11,6 +11,7 @@ import { Lock } from "lucide-react";
 const MobileChatContainer = () => {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [viewportHeight, setViewportHeight] = useState("100vh");
+  const [isMessageTyping, setIsMessageTyping] = useState(false);
 
   const {
     messages,
@@ -20,8 +21,8 @@ const MobileChatContainer = () => {
     subscribeToMessages,
     unsubscribeFromMessages,
   } = useChatStore();
-  const { authUser, socket, setMsgSenderName } = useAuthStore();
-  const messageEndRef = useRef(null);
+  const { authUser, socket, setMsgSenderName, msgSenderName } = useAuthStore();
+  const bottomRef = useRef(null);
 
   // Handle User typing messages
   useEffect(() => {
@@ -34,6 +35,12 @@ const MobileChatContainer = () => {
     };
   }, [socket, setMsgSenderName]);
 
+  // Check message typing status
+  useEffect(() => {
+    const bool = selectedUser.fullName.split(" ")[0] === msgSenderName;
+    setIsMessageTyping(bool);
+  }, [msgSenderName, selectedUser]);
+
   useEffect(() => {
     getMessages(selectedUser._id);
     subscribeToMessages();
@@ -45,8 +52,9 @@ const MobileChatContainer = () => {
     unsubscribeFromMessages,
   ]);
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (bottomRef.current)
+      bottomRef.current.scrollIntoView({ behavior: "instant" });
+  }, [isMessageTyping, messages]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -100,7 +108,7 @@ const MobileChatContainer = () => {
 
       {/* Chat Messages */}
       <div
-        className="flex-1 p-4 my-16 space-y-4 overflow-y-auto sm:my-0 "
+        className="flex-1 px-4 pt-4 my-16 space-y-2 overflow-y-auto sm:my-0 "
         style={{
           paddingBottom: keyboardHeight ? "80px" : "",
         }}
@@ -125,7 +133,6 @@ const MobileChatContainer = () => {
             className={`chat ${
               message.senderId === authUser._id ? "chat-end" : "chat-start"
             }`}
-            ref={messageEndRef} // Scroll to bottom when new message arrives
           >
             {/* Avatar */}
             <div className="avatar chat-image">
@@ -166,6 +173,32 @@ const MobileChatContainer = () => {
             </div>
           </div>
         ))}
+
+        {/* Typing Indicator */}
+        {isMessageTyping && (
+          <div className="chat chat-start animate-slideUpDown">
+            {/* Avatar */}
+            <div className="avatar chat-image">
+              <div className="border rounded-full size-10">
+                <img
+                  src={selectedUser.profilePic || "/avatar.png"}
+                  alt="picture"
+                />
+              </div>
+            </div>
+            {/* Indicator */}
+            <div className="pt-5 chat-bubble text-base-content/70 bg-base-300">
+              <div className="flex space-x-1 animate-pulse">
+                <div className="bg-gray-500 rounded-full size-2 animate-bounce-1"></div>
+                <div className="bg-gray-500 rounded-full size-2 animate-bounce-2"></div>
+                <div className="bg-gray-500 rounded-full size-2 animate-bounce-3"></div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Dummy element to scroll into view */}
+        <div ref={bottomRef} />
       </div>
       {/* Message Input */}
       <MessageInput keyboardHeight={keyboardHeight} />
