@@ -2,10 +2,35 @@ import { Link } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import { LogOut, MessageSquare, Settings, User } from "lucide-react";
 import useChatStore from "../store/useChatStore";
+import toast from "react-hot-toast";
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
   const { selectedUser } = useChatStore();
+
+  const showLogoutToast = () => {
+    toast(
+      (t) => (
+        <div className="flex items-center justify-center gap-2 sm:text-base text-sm">
+          <p className="sm:hidden">Please confirm your logout action.</p>
+          <p className="hidden sm:block">Logging out? Please confirm.</p>
+          <button
+            className=" bg-red-500 hover:bg-red-600 px-2 py-1 rounded"
+            onClick={() => {
+              logout();
+              toast.dismiss(t.id);
+            }}
+          >
+            Logout
+          </button>
+        </div>
+      ),
+      {
+        duration: 5000,
+      }
+    );
+  };
+
   return (
     <header
       className={`fixed top-0 z-40 w-full border-b bg-base-100 border-base-300 backdrop-blur-lg bg-base-100/80 ${
@@ -46,7 +71,7 @@ const Navbar = () => {
 
                 <button
                   className="flex items-center gap-2 text-red-600"
-                  onClick={logout}
+                  onClick={showLogoutToast}
                 >
                   <LogOut className="size-5" />
                   <span className="hidden font-medium sm:inline">Logout</span>
