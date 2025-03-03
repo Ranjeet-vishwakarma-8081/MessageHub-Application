@@ -15,8 +15,6 @@ const ChatHeader = () => {
 
     // Listen for real-time update lastSeen
     socket.on("update-last-seen", ({ userId: updatedUserId, lastSeen }) => {
-      console.log("Updated userId -", updatedUserId);
-      console.log("Updated User lastSeen -", lastSeen);
       if (updatedUserId === selectedUser._id)
         setLastSeen(formatMessageTime(lastSeen));
     });
