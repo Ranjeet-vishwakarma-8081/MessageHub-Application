@@ -11,11 +11,11 @@ const Navbar = () => {
   const showLogoutToast = () => {
     toast(
       (t) => (
-        <div className="flex items-center justify-center gap-2 sm:text-base text-sm">
+        <div className="flex items-center justify-center gap-2 text-sm sm:text-base">
           <p className="sm:hidden">Please confirm your logout action.</p>
           <p className="hidden sm:block">Logging out? Please confirm.</p>
           <button
-            className=" bg-red-500 hover:bg-red-600 px-2 py-1 rounded"
+            className="px-2 py-1 bg-red-500 rounded hover:bg-red-600"
             onClick={() => {
               logout();
               toast.dismiss(t.id);
