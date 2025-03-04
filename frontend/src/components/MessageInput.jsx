@@ -77,6 +77,13 @@ const MessageInput = ({ keyboardHeight }) => {
     setSelectedCamera(true);
   };
 
+  const handleInputChange = (e) => {
+    const str = e.target.value;
+    const capitalizeValue = str.charAt(0).toUpperCase() + str.slice(1);
+    setText(capitalizeValue);
+    handleTyping();
+  };
+
   return (
     <div
       className={`${
@@ -119,10 +126,7 @@ const MessageInput = ({ keyboardHeight }) => {
               className="w-full pr-10 rounded-full sm:pr-4 input input-bordered input-md focus:outline-none"
               placeholder="Type a message"
               value={text}
-              onChange={(e) => {
-                setText(e.target.value);
-                handleTyping();
-              }}
+              onChange={handleInputChange}
               onBlur={handleStopTyping} // When user clicks away
             />
           </div>
