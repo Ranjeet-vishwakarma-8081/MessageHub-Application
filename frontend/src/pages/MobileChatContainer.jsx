@@ -9,10 +9,12 @@ import { formatMessageTime } from "../lib/utils.js";
 import { Lock } from "lucide-react";
 
 const MobileChatContainer = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [viewportHeight, setViewportHeight] = useState("100vh");
   const [isMessageTyping, setIsMessageTyping] = useState(false);
 
+  const SHORT_LIMIT = 200; // Show only 200 characters initially
   const {
     messages,
     getMessages,
@@ -169,7 +171,24 @@ const MobileChatContainer = () => {
                   className="max-w-[200px] rounded-md mb-2"
                 />
               )}
-              {message.text && <p>{message.text}</p>}
+              {message.text && (
+                <div>
+                  <p>
+                    {isExpanded
+                      ? message.text
+                      : message.text.slice(0, SHORT_LIMIT) +
+                        (message.text.length > SHORT_LIMIT ? "..." : " ")}
+                    {message.text.length > SHORT_LIMIT && (
+                      <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="text-blue-500 "
+                      >
+                        {!isExpanded && "Read more"}
+                      </button>
+                    )}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         ))}
