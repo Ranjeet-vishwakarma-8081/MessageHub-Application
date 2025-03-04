@@ -124,7 +124,6 @@ const MessageInput = ({ keyboardHeight }) => {
                 handleTyping();
               }}
               onBlur={handleStopTyping} // When user clicks away
-              name="message_input"
             />
           </div>
           <input
