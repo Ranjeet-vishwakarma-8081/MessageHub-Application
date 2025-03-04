@@ -85,11 +85,20 @@ const SettingsPage = () => {
                   {/* Chat Header */}
                   <div className="p-3 border-b border-base-300 bg-base-100">
                     <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center w-8 h-8 font-medium rounded-full bg-primary text-primary-content">
+                      {/* <div className="flex items-center justify-center w-8 h-8 font-medium rounded-full bg-primary text-primary-content">
                         R
+                      </div> */}
+                      <div>
+                        <img
+                          className="object-cover rounded-full size-8"
+                          src="/Ranjeet_profile_photo.jpg"
+                          alt="Ranjeet profile"
+                        />
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium">Ranjeet Vishwakarma</h3>
+                        <h3 className="text-sm font-medium">
+                          Ranjeet Vishwakarma
+                        </h3>
                         <p className="text-xs text-green-600">Online</p>
                       </div>
                     </div>
