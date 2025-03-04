@@ -5,7 +5,7 @@ import useAuthStore from "../store/useAuthStore";
 import ChatHeader from "./ChatHeader.jsx";
 import MessageInput from "./MessageInput.jsx";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
-import { formatMessageTime } from "../lib/utils.js";
+import { formatDate, formatMessageTime } from "../lib/utils.js";
 import { Lock } from "lucide-react";
 
 const ChatContainer = () => {
@@ -88,22 +88,6 @@ const ChatContainer = () => {
       </div>
     );
   }
-
-  const formatDate = (date) => {
-    const today = new Date();
-    const messageDate = new Date(date);
-    const diffInDays = Math.floor(
-      (today - messageDate) / (1000 * 60 * 60 * 24)
-    );
-
-    if (diffInDays === 0) return "Today"; // Show "Today" for today's messages
-    if (diffInDays < 7) {
-      return new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-        messageDate
-      );
-    }
-    return messageDate.toLocaleDateString("en-GB").replace(/\//g, "/"); // Format: DD/MM/YY
-  };
 
   // Track the last date of sent message
   let lastDate = null;
