@@ -116,7 +116,7 @@ const MessageInput = ({ keyboardHeight }) => {
             </div>
             <input
               type="text"
-              className="w-full rounded-full input input-bordered input-md focus:outline-none"
+              className="w-full pr-10 rounded-full sm:pr-4 input input-bordered input-md focus:outline-none"
               placeholder="Type a message"
               value={text}
               onChange={(e) => {
