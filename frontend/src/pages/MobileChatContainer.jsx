@@ -98,6 +98,25 @@ const MobileChatContainer = () => {
     );
   }
 
+  const formatDate = (date) => {
+    const today = new Date();
+    const messageDate = new Date(date);
+    const diffInDays = Math.floor(
+      (today - messageDate) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffInDays === 0) return "Today"; // Show "Today" for today's messages
+    if (diffInDays < 7) {
+      return new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+        messageDate
+      );
+    }
+    return messageDate.toLocaleDateString("en-GB").replace(/\//g, "/"); // Format: DD/MM/YY
+  };
+
+  // Track the last date of sent message
+  let lastDate = null;
+
   return (
     <div
       className="flex flex-col flex-1 overflow-auto "
@@ -129,69 +148,83 @@ const MobileChatContainer = () => {
           </div>
         </div>
 
-        {messages.map((message) => (
-          <div
-            key={message._id}
-            className={`chat ${
-              message.senderId === authUser._id ? "chat-end" : "chat-start"
-            }`}
-          >
-            {/* Avatar */}
-            <div className="avatar chat-image">
-              <div className="border rounded-full size-10">
-                <img
-                  src={
-                    message.senderId === authUser._id
-                      ? authUser.profilePic || "/avatar.png"
-                      : selectedUser.profilePic || "/avatar.png"
-                  }
-                  alt="profile-pic"
-                />
-              </div>
-            </div>
-            {/* Header */}
-            <div className="mb-1 chat-header">
-              <time className="ml-1 text-xs opacity-50">
-                {formatMessageTime(message.createdAt)}
-              </time>
-            </div>
-            {/* messages */}
-            <div
-              className={`flex flex-col chat-bubble 
+        {messages.map((message) => {
+          const messageDate = formatDate(new Date(message.createdAt));
+          const showDate = lastDate !== messageDate; //Show date only if it's different
+          lastDate = messageDate; // Update last date
+          return (
+            <div key={message._id}>
+              {showDate && (
+                <div className="text-xs text-center text-gray-500 ">
+                  <span className="p-1 rounded-md bg-base-200">
+                    {messageDate}
+                  </span>
+                </div>
+              )}
+
+              <div
+                className={`chat ${
+                  message.senderId === authUser._id ? "chat-end" : "chat-start"
+                }`}
+              >
+                {/* Avatar */}
+                <div className="avatar chat-image">
+                  <div className="border rounded-full size-10">
+                    <img
+                      src={
+                        message.senderId === authUser._id
+                          ? authUser.profilePic || "/avatar.png"
+                          : selectedUser.profilePic || "/avatar.png"
+                      }
+                      alt="profile-pic"
+                    />
+                  </div>
+                </div>
+                {/* Header */}
+                <div className="mb-1 chat-header">
+                  <time className="ml-1 text-xs opacity-50">
+                    {formatMessageTime(message.createdAt)}
+                  </time>
+                </div>
+                {/* messages */}
+                <div
+                  className={`flex flex-col chat-bubble 
                 ${
                   message.senderId === authUser._id
                     ? "chat-end bg-primary text-primary-content/70"
                     : "chat-start bg-base-300 text-base-content/70"
                 }`}
-            >
-              {message.image && (
-                <img
-                  src={message.image}
-                  alt="Attachment"
-                  className="max-w-[200px] rounded-md mb-2"
-                />
-              )}
-              {message.text && (
-                <div>
-                  <p>
-                    {isExpanded
-                      ? message.text
-                      : message.text.slice(0, SHORT_LIMIT) +
-                        (message.text.length > SHORT_LIMIT ? "..." : " ")}
-                    {message.text.length > SHORT_LIMIT && (
-                      <button
-                        onClick={() => setIsExpanded(!isExpanded)}
-                        className="text-blue-500 "
-                      >
-                        {!isExpanded && "Read more"}
-                      </button>
-                    )}
-                  </p>
+                >
+                  {message.image && (
+                    <img
+                      src={message.image}
+                      alt="Attachment"
+                      className="max-w-[200px] rounded-md mb-2"
+                    />
+                  )}
+                  {message.text && (
+                    <div>
+                      <p>
+                        {isExpanded
+                          ? message.text
+                          : message.text.slice(0, SHORT_LIMIT) +
+                            (message.text.length > SHORT_LIMIT ? "..." : " ")}
+                        {message.text.length > SHORT_LIMIT && (
+                          <button
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="text-blue-500 "
+                          >
+                            {!isExpanded && "Read more"}
+                          </button>
+                        )}
+                      </p>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {/* Typing Indicator */}
         {isMessageTyping && (
