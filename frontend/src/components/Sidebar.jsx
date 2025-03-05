@@ -22,6 +22,17 @@ const Sidebar = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const searchRef = useRef("");
 
+  // Dynamically change the application title
+  useEffect(() => {
+    // document.title = selectedUser? selectedUser.fullName : "MessageHub | Realtime Chat Application";
+    document.title =
+      messageCounter >= 1
+        ? selectedUser
+          ? selectedUser.fullName
+          : `(${messageCounter}) MessageHub | Realtime Chat Application`
+        : "MessageHub | Realtime Chat Application";
+  }, [selectedUser, messageCounter]);
+
   useEffect(() => {
     !selectedUser
       ? socket.on("newMessage", (newMessage) => {
@@ -157,7 +168,7 @@ const Sidebar = () => {
               </div>
 
               {/* Notification counter */}
-              {!selectedUser &&
+              {selectedUser?._id !== newMessageSenderId &&
                 messageCounter >= 1 &&
                 user._id === newMessageSenderId && (
                   <div className="absolute inset-y-0 flex items-center right-5">
