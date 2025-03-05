@@ -14,6 +14,14 @@ const useChatStore = create((set, get) => ({
 
   newMessageSenderId: null,
   messageCounter: 0,
+  lastSeenTime: null,
+  lastSeenDate: null,
+  setLastSeenTime: (time) => {
+    set({ lastSeenTime: time });
+  },
+  setLastSeenDate: (date) => {
+    set({ lastSeenDate: date });
+  },
   setMessageCounter: (counter, reset = false) => {
     set((prevCount) => ({
       messageCounter: reset ? 0 : prevCount.messageCounter + counter,

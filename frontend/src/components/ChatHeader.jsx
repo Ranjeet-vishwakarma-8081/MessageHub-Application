@@ -2,23 +2,30 @@ import { ArrowLeft, X } from "lucide-react";
 import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
 import { formatDate, formatMessageTime } from "../lib/utils";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const ChatHeader = () => {
-  const { selectedUser, setSelectedUser } = useChatStore();
+  const {
+    getUsers,
+    selectedUser,
+    setSelectedUser,
+    lastSeenTime,
+    setLastSeenTime,
+    lastSeenDate,
+    setLastSeenDate,
+  } = useChatStore();
   const { onlineUsers, socket } = useAuthStore();
-  const [lastSeen, setLastSeen] = useState(null);
-  const [lastSeenDate, setLastSeenDate] = useState(null);
 
   useEffect(() => {
+    getUsers();
     // Fetch lastSeen from the selectedUser
-    setLastSeen(formatMessageTime(selectedUser.lastSeen));
+    setLastSeenTime(formatMessageTime(selectedUser.lastSeen));
     setLastSeenDate(formatDate(selectedUser.lastSeen));
 
     // Listen for real-time update lastSeen
     socket.on("update-last-seen", ({ userId: updatedUserId, lastSeen }) => {
       if (updatedUserId === selectedUser._id) {
-        setLastSeen(formatMessageTime(lastSeen));
+        setLastSeenTime(formatMessageTime(lastSeen));
         setLastSeenDate(formatDate(lastSeen));
       }
     });
@@ -26,7 +33,7 @@ const ChatHeader = () => {
     return () => {
       socket.off("update-last-seen");
     };
-  }, [selectedUser, socket]);
+  }, [selectedUser, socket, setLastSeenTime, setLastSeenDate, getUsers]);
 
   return (
     <div
@@ -57,7 +64,7 @@ const ChatHeader = () => {
                 <span className="text-green-600">Online</span>
               ) : (
                 <span className="text-zinc-400">
-                  last seen {lastSeenDate?.toLowerCase()} at {lastSeen}
+                  last seen {lastSeenDate?.toLowerCase()} at {lastSeenTime}
                 </span>
               )}
             </p>
