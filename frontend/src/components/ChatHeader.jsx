@@ -1,22 +1,26 @@
 import { ArrowLeft, X } from "lucide-react";
 import useChatStore from "../store/useChatStore";
 import useAuthStore from "../store/useAuthStore";
-import { formatMessageTime } from "../lib/utils";
+import { formatDate, formatMessageTime } from "../lib/utils";
 import { useEffect, useState } from "react";
 
 const ChatHeader = () => {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers, socket } = useAuthStore();
   const [lastSeen, setLastSeen] = useState(null);
+  const [lastSeenDate, setLastSeenDate] = useState(null);
 
   useEffect(() => {
     // Fetch lastSeen from the selectedUser
     setLastSeen(formatMessageTime(selectedUser.lastSeen));
+    setLastSeenDate(formatDate(selectedUser.lastSeen));
 
     // Listen for real-time update lastSeen
     socket.on("update-last-seen", ({ userId: updatedUserId, lastSeen }) => {
-      if (updatedUserId === selectedUser._id)
+      if (updatedUserId === selectedUser._id) {
         setLastSeen(formatMessageTime(lastSeen));
+        setLastSeenDate(formatDate(lastSeen));
+      }
     });
 
     return () => {
@@ -52,7 +56,9 @@ const ChatHeader = () => {
               {onlineUsers.includes(selectedUser._id) ? (
                 <span className="text-green-600">Online</span>
               ) : (
-                <span className="text-zinc-400">last seen at {lastSeen}</span>
+                <span className="text-zinc-400">
+                  last seen {lastSeenDate?.toLowerCase()} at {lastSeen}
+                </span>
               )}
             </p>
           </div>
