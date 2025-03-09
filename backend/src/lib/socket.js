@@ -14,6 +14,7 @@ const io = new Server(server, {
 
 // Used to store Online users
 const userSocketMap = {}; // { userId : socketId } //userId from Database and socketId come from socket
+export const activeChats = new Map(); // { userB_id: userA_id }
 
 export const getReceiverSocketId = (userId) => userSocketMap[userId];
 
@@ -37,6 +38,14 @@ io.on("connection", (socket) => {
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("userStoppedTyping");
     }
+  });
+
+  socket.on("chat-opened", ({ userId, chatWith }) => {
+    activeChats.set(userId, chatWith);
+  });
+
+  socket.on("chat-closed", ({ userId, chatWith }) => {
+    if (activeChats.get(userId) === chatWith) activeChats.delete(userId);
   });
 
   socket.on("disconnect", async (reason) => {
