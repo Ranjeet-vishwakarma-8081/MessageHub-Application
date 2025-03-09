@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
-import { getReceiverSocketId ,io} from "../lib/socket.js";
+import { getReceiverSocketId, io, activeChats } from "../lib/socket.js";
 
 export const getUsersForSidebar = async (req, res) => {
   try {
@@ -55,6 +55,14 @@ export const sendMessage = async (req, res) => {
     });
     await newMessage.save();
 
+    // If User B is NOT actively chatting with User A, save notification
+    const receiverChatWith = activeChats.get(receiverId);
+    if (receiverChatWith !== senderId.toString()) {
+      // Update notification count for receiver
+      await User.findByIdAndUpdate(receiverId, {
+        $inc: { [`notifications.${senderId}`]: 1 },
+      });
+    }
     // TODO: Realtime functionality goes here => socket.io
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
@@ -64,5 +72,20 @@ export const sendMessage = async (req, res) => {
   } catch (error) {
     console.error("Error in sendMessage controller : ", error.message);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const resetNotification = async (req, res) => {
+  try {
+    const { id: authUserId } = req.params;
+    const { senderId } = req.body;
+
+    await User.findByIdAndUpdate(authUserId, {
+      $unset: { [`notifications.${senderId}`]: "" },
+    });
+    res.status(200).json({ message: "Notification reset successfully" });
+  } catch (error) {
+    console.error("Error in reset notification route : ", error.message);
+    res.status(500).json({ error: "Failed to reset notifications" });
   }
 };
