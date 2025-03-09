@@ -15,7 +15,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 6,
-      
     },
     profilePic: {
       type: String,
@@ -24,6 +23,11 @@ const userSchema = new mongoose.Schema(
     lastSeen: {
       type: Date,
       default: "",
+    },
+    notifications: {
+      type: Map,
+      of: Number,  //stores unread count for each sender
+      default: {}, // { senderUserId : value }
     },
   },
   { timestamps: true }
