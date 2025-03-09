@@ -33,7 +33,7 @@ app.use(cookieParser()); // For parsing cookies
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173", // Specify the hosted URL of your frontend Application
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allowed HTTP methods
     credentials: true, // Include cookies in requests
   })
 );
