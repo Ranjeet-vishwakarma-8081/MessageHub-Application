@@ -12,15 +12,16 @@ const Sidebar = () => {
     setSelectedUser,
     isUsersLoading,
     messageCounter,
-    setMessageCounter,
     newMessageSenderId,
     setNewMessageSenderId,
+    resetNotifications,
   } = useChatStore();
-  const { onlineUsers, socket, setMsgSenderName, msgSenderName } =
+  const { onlineUsers, socket, setMsgSenderName, msgSenderName, authUser } =
     useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const searchRef = useRef("");
+  const [notifications, setNotifications] = useState({});
 
   // Dynamically change the application title
   useEffect(() => {
@@ -34,17 +35,28 @@ const Sidebar = () => {
   }, [selectedUser, messageCounter]);
 
   useEffect(() => {
-    !selectedUser
-      ? socket.on("newMessage", (newMessage) => {
-          setMessageCounter(1);
-          setNewMessageSenderId(newMessage.senderId);
-        })
-      : setMessageCounter(0, true);
+    // Get all authUser's notifications
+    setNotifications((prev) => ({
+      ...prev, //preserve real-time updates
+      ...authUser.notifications, //syn with database
+    }));
+
+    socket.on("newMessage", (newMessage) => {
+      if (selectedUser?._id === newMessage.senderId) {
+        // If receiver is already chatting with sender, don't update the notification
+        return;
+      }
+      setNotifications((prev) => ({
+        ...prev,
+        [newMessage.senderId]: (prev[newMessage.senderId] || 0) + 1,
+      }));
+      setNewMessageSenderId(newMessage.senderId);
+    });
 
     return () => {
       socket.off("newMessage");
     };
-  }, [setMessageCounter, setNewMessageSenderId, socket, selectedUser]);
+  }, [authUser, setNewMessageSenderId, socket, setNotifications, selectedUser]);
 
   const filterUsers = useCallback(() => {
     const searchTerm = searchRef.current?.value?.toLowerCase();
@@ -80,6 +92,36 @@ const Sidebar = () => {
       socket.off("userStoppedTyping");
     };
   }, [socket, setMsgSenderName]);
+
+  const handleUserClick = (user) => {
+    setSelectedUser(user);
+    if (notifications[user._id]) {
+      // notification reset in MongoDB
+      resetNotifications(authUser._id, newMessageSenderId || user._id);
+
+      // Remove notification and newMessageSenderId for this user in local state
+      setNotifications((prev) => {
+        const updated = { ...prev };
+        delete updated[user._id];
+        return updated;
+      });
+      setNewMessageSenderId(null);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedUser)
+      socket.emit("chat-opened", {
+        userId: authUser._id,
+        chatWith: selectedUser._id,
+      });
+
+    return () =>
+      socket.emit("chat-closed", {
+        userId: authUser._id,
+        chatWith: selectedUser?._id,
+      });
+  }, [selectedUser, socket, authUser]);
 
   if (isUsersLoading) return <SidebarSkeleton />;
   return (
@@ -130,7 +172,7 @@ const Sidebar = () => {
           filteredUsers.map((user) => (
             <button
               key={user._id}
-              onClick={() => setSelectedUser(user)}
+              onClick={() => handleUserClick(user)}
               className={`
                 p-3 gap-3 w-full flex hover:bg-base-300 transition-colors max-h-16 relative ${
                   selectedUser?._id === user._id
@@ -168,12 +210,11 @@ const Sidebar = () => {
               </div>
 
               {/* Notification counter */}
-              {selectedUser?._id !== newMessageSenderId &&
-                messageCounter >= 1 &&
-                user._id === newMessageSenderId && (
+              {notifications?.[user._id] &&
+                !Object.keys(notifications).includes(selectedUser?._id) && (
                   <div className="absolute inset-y-0 flex items-center right-5">
                     <div className="px-2 py-1 text-xs font-medium text-black bg-green-500 rounded-full">
-                      {messageCounter}
+                      {notifications[user._id]}
                     </div>
                   </div>
                 )}
