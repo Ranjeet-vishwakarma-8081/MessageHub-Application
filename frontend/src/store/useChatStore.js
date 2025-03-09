@@ -78,6 +78,17 @@ const useChatStore = create((set, get) => ({
   },
   setSelectedUser: (selectedNewUser) => set({ selectedUser: selectedNewUser }),
 
+  resetNotifications: async (authUserId, senderId) => {
+    try {
+      await axiosInstance.patch(`/messages/reset-notification/${authUserId}`, {
+        senderId,
+      });
+    } catch (error) {
+      console.error("Error in reset notification route : ", error.message);
+      toast.error(error.message);
+    }
+  },
+
   // Socket event listener
   subscribeToMessages: () => {
     const { selectedUser } = get();
