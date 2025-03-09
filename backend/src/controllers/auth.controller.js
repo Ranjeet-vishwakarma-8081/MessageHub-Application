@@ -98,6 +98,7 @@ export const login = async (req, res) => {
         profilePic: user.profilePic,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+        notifications: user.notifications,
       },
     });
   } catch (error) {
