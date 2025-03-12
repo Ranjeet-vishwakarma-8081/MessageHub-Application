@@ -16,6 +16,30 @@ const useChatStore = create((set, get) => ({
   messageCounter: 0,
   lastSeenTime: null,
   lastSeenDate: null,
+  notifications: {},
+  setNotifications: (authUserNotifications) => {
+    set((prev) => ({
+      notifications: {
+        ...prev.notifications, // Preserve real-time updates
+        ...authUserNotifications, // Sync with DB
+      },
+    }));
+  },
+  incrementNotification: (senderId) => {
+    set((prev) => ({
+      notifications: {
+        ...prev.notifications,
+        [senderId]: (prev.notifications[senderId] || 0) + 1,
+      },
+    }));
+  },
+  clearNotification: (userId) => {
+    set((prev) => {
+      const newNotifications = { ...prev.notifications };
+      delete newNotifications[userId]; // Remove notification count for particular user
+      return { notifications: newNotifications };
+    });
+  },
   setLastSeenTime: (time) => {
     set({ lastSeenTime: time });
   },
