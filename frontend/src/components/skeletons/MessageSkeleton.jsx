@@ -1,6 +1,6 @@
 const MessageSkeleton = () => {
   // Create an array of 6 items for skeleton messages
-  const skeletonMessages = Array(6).fill(null);
+  const skeletonMessages = Array(8).fill(null);
   return (
     <div className="flex-1 p-4 space-y-2 overflow-y-auto ">
       {
@@ -19,7 +19,7 @@ const MessageSkeleton = () => {
               <div className="w-16 h-4 skeleton" />
             </div>
             <div className="p-0 bg-transparent chat-bubble">
-              <div className="skeleton h-16 w-[200px]" />
+              <div className="skeleton h-11 w-[200px]" />
             </div>
           </div>
         ))
