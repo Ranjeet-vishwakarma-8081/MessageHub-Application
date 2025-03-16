@@ -11,7 +11,6 @@ const useChatStore = create((set, get) => ({
   isMessagesLoading: false,
   selectedCamera: false,
   imagePreview: null,
-  newMessageSenderId: null,
   lastSeenTime: null,
   lastSeenDate: null,
   notifications: {},
@@ -43,9 +42,6 @@ const useChatStore = create((set, get) => ({
   },
   setLastSeenDate: (date) => {
     set({ lastSeenDate: date });
-  },
-  setNewMessageSenderId: (messageSenderId) => {
-    set({ newMessageSenderId: messageSenderId });
   },
 
   setImagePreview: (image) => {

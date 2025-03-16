@@ -11,8 +11,6 @@ const Sidebar = () => {
     selectedUser,
     setSelectedUser,
     isUsersLoading,
-    newMessageSenderId,
-    setNewMessageSenderId,
     resetNotifications,
     notifications,
     setNotifications,
@@ -50,7 +48,6 @@ const Sidebar = () => {
         return;
       }
       incrementNotification(newMessage.senderId);
-      setNewMessageSenderId(newMessage.senderId);
     });
 
     return () => {
@@ -58,7 +55,6 @@ const Sidebar = () => {
     };
   }, [
     authUser,
-    setNewMessageSenderId,
     socket,
     setNotifications,
     selectedUser,
@@ -105,7 +101,7 @@ const Sidebar = () => {
     if (notifications[user._id]) {
       try {
         // notification reset in MongoDB
-        await resetNotifications(authUser._id, newMessageSenderId || user._id);
+        await resetNotifications(authUser._id, user._id);
         // Remove notification for this user in local state
         clearNotification(user._id);
         await getUsers();
