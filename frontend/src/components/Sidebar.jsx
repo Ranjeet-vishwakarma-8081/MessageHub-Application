@@ -11,7 +11,6 @@ const Sidebar = () => {
     selectedUser,
     setSelectedUser,
     isUsersLoading,
-    messageCounter,
     newMessageSenderId,
     setNewMessageSenderId,
     resetNotifications,
@@ -28,14 +27,16 @@ const Sidebar = () => {
 
   // Dynamically change the application title
   useEffect(() => {
-    // document.title = selectedUser? selectedUser.fullName : "MessageHub | Realtime Chat Application";
+    const counter = Object.values(notifications).reduce(
+      (acc, val) => acc + val,
+      0
+    );
+
     document.title =
-      messageCounter >= 1
-        ? selectedUser
-          ? selectedUser.fullName
-          : `(${messageCounter}) MessageHub | Realtime Chat Application`
+      counter > 0
+        ? `(${counter}) MessageHub | Realtime Chat Application`
         : "MessageHub | Realtime Chat Application";
-  }, [selectedUser, messageCounter]);
+  }, [notifications]);
 
   useEffect(() => {
     // Get all authUser's notifications

@@ -11,9 +11,7 @@ const useChatStore = create((set, get) => ({
   isMessagesLoading: false,
   selectedCamera: false,
   imagePreview: null,
-
   newMessageSenderId: null,
-  messageCounter: 0,
   lastSeenTime: null,
   lastSeenDate: null,
   notifications: {},
@@ -45,11 +43,6 @@ const useChatStore = create((set, get) => ({
   },
   setLastSeenDate: (date) => {
     set({ lastSeenDate: date });
-  },
-  setMessageCounter: (counter, reset = false) => {
-    set((prevCount) => ({
-      messageCounter: reset ? 0 : prevCount.messageCounter + counter,
-    }));
   },
   setNewMessageSenderId: (messageSenderId) => {
     set({ newMessageSenderId: messageSenderId });
