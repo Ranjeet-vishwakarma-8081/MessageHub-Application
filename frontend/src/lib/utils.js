@@ -8,6 +8,8 @@ export const formatMessageTime = (date) =>
 export const formatDate = (date) => {
   const today = new Date();
   const messageDate = new Date(date);
+  today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate comparisons
+  messageDate.setHours(0, 0, 0, 0);
   const diffInDays = Math.floor((today - messageDate) / (1000 * 60 * 60 * 24));
 
   if (diffInDays === 0) return "Today"; // Show "Today" for today's messages
