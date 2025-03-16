@@ -41,6 +41,7 @@ const MessageInput = ({ keyboardHeight }) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
     try {
+      handleStopTyping(); // Stop typing when message is sent
       await sendMessage({
         text: text.trim(),
         image: imagePreview,
@@ -48,7 +49,6 @@ const MessageInput = ({ keyboardHeight }) => {
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
-      handleStopTyping(); // Stop typing when message is sent
     } catch (error) {
       toast.error(error.response.data.message);
       console.error("Failed to send message -", error.message);
