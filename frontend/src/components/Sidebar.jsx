@@ -15,13 +15,16 @@ const Sidebar = () => {
     newMessageSenderId,
     setNewMessageSenderId,
     resetNotifications,
+    notifications,
+    setNotifications,
+    incrementNotification,
+    clearNotification,
   } = useChatStore();
   const { onlineUsers, socket, setMsgSenderName, msgSenderName, authUser } =
     useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const searchRef = useRef("");
-  const [notifications, setNotifications] = useState({});
 
   // Dynamically change the application title
   useEffect(() => {
@@ -36,34 +39,38 @@ const Sidebar = () => {
 
   useEffect(() => {
     // Get all authUser's notifications
-    setNotifications((prev) => ({
-      ...prev, //preserve real-time updates
-      ...authUser.notifications, //syn with database
-    }));
-
+    const AuthUser = users.filter((user) => user._id === authUser._id);
+    if (AuthUser[0]?.notifications !== undefined) {
+      setNotifications(AuthUser[0]?.notifications);
+    }
     socket.on("newMessage", (newMessage) => {
       if (selectedUser?._id === newMessage.senderId) {
         // If receiver is already chatting with sender, don't update the notification
         return;
       }
-      setNotifications((prev) => ({
-        ...prev,
-        [newMessage.senderId]: (prev[newMessage.senderId] || 0) + 1,
-      }));
+      incrementNotification(newMessage.senderId);
       setNewMessageSenderId(newMessage.senderId);
     });
 
     return () => {
       socket.off("newMessage");
     };
-  }, [authUser, setNewMessageSenderId, socket, setNotifications, selectedUser]);
+  }, [
+    authUser,
+    setNewMessageSenderId,
+    socket,
+    setNotifications,
+    selectedUser,
+    incrementNotification,
+    users,
+  ]);
 
   const filterUsers = useCallback(() => {
     const searchTerm = searchRef.current?.value?.toLowerCase();
 
     let filtered = showOnlineOnly
       ? users.filter((user) => onlineUsers.includes(user._id))
-      : users;
+      : users.filter((user) => user._id !== authUser._id); // Except the authUser
 
     if (searchTerm) {
       filtered = filtered.filter((user) =>
@@ -72,7 +79,7 @@ const Sidebar = () => {
     }
 
     setFilteredUsers(filtered);
-  }, [users, onlineUsers, showOnlineOnly]);
+  }, [users, onlineUsers, showOnlineOnly, authUser]);
 
   // fetch users on componenet mount
   useEffect(() => {
@@ -93,35 +100,23 @@ const Sidebar = () => {
     };
   }, [socket, setMsgSenderName]);
 
-  const handleUserClick = (user) => {
-    setSelectedUser(user);
+  const handleUserClick = async (user) => {
     if (notifications[user._id]) {
-      // notification reset in MongoDB
-      resetNotifications(authUser._id, newMessageSenderId || user._id);
-
-      // Remove notification and newMessageSenderId for this user in local state
-      setNotifications((prev) => {
-        const updated = { ...prev };
-        delete updated[user._id];
-        return updated;
-      });
-      setNewMessageSenderId(null);
+      try {
+        // notification reset in MongoDB
+        await resetNotifications(authUser._id, newMessageSenderId || user._id);
+        // Remove notification for this user in local state
+        clearNotification(user._id);
+        await getUsers();
+        setSelectedUser(user);
+      } catch (error) {
+        console.log("Error in notification clearing - ", error.message);
+      }
+    } else {
+      await getUsers();
+      setSelectedUser(user);
     }
   };
-
-  useEffect(() => {
-    if (selectedUser)
-      socket.emit("chat-opened", {
-        userId: authUser._id,
-        chatWith: selectedUser._id,
-      });
-
-    return () =>
-      socket.emit("chat-closed", {
-        userId: authUser._id,
-        chatWith: selectedUser?._id,
-      });
-  }, [selectedUser, socket, authUser]);
 
   if (isUsersLoading) return <SidebarSkeleton />;
   return (

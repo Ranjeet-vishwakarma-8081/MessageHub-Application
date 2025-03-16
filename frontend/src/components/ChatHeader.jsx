@@ -6,7 +6,6 @@ import { useEffect } from "react";
 
 const ChatHeader = () => {
   const {
-    getUsers,
     selectedUser,
     setSelectedUser,
     lastSeenTime,
@@ -14,10 +13,9 @@ const ChatHeader = () => {
     lastSeenDate,
     setLastSeenDate,
   } = useChatStore();
-  const { onlineUsers, socket } = useAuthStore();
+  const { authUser, onlineUsers, socket } = useAuthStore();
 
   useEffect(() => {
-    getUsers();
     // Fetch lastSeen from the selectedUser
     setLastSeenTime(formatMessageTime(selectedUser.lastSeen));
     setLastSeenDate(formatDate(selectedUser.lastSeen));
@@ -33,7 +31,21 @@ const ChatHeader = () => {
     return () => {
       socket.off("update-last-seen");
     };
-  }, [selectedUser, socket, setLastSeenTime, setLastSeenDate, getUsers]);
+  }, [selectedUser, socket, setLastSeenTime, setLastSeenDate]);
+
+  useEffect(() => {
+    if (selectedUser)
+      socket.emit("chat-opened", {
+        userId: authUser._id,
+        chatWith: selectedUser._id,
+      });
+
+    return () =>
+      socket.emit("chat-closed", {
+        userId: authUser._id,
+        chatWith: selectedUser?._id,
+      });
+  }, [selectedUser, socket, authUser]);
 
   return (
     <div
