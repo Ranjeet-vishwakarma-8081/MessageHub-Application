@@ -43,10 +43,11 @@ app.use("/api/messages", messageRoutes);
 
 // If we're in Production then make the dist folder to be our static assets
 if (process.env.NODE_ENV === "production") {
+   // Serve static files from the frontend's dist directory
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
   // Except the above route if any request comes, then i'll redirect to the frontend index.html file
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "/frontend", "dist", "index.html"));
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
   });
 }
 
