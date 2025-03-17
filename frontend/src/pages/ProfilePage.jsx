@@ -74,7 +74,7 @@ const ProfilePage = () => {
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2 text-sm ">
                   <User className="size-4" />
-                  Full Name
+                  User name
                 </div>
                 <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
                   {authUser.fullName}

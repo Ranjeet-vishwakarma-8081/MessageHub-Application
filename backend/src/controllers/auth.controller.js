@@ -16,10 +16,15 @@ export const checkAuth = (req, res) => {
 };
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
-  console.log(fullName, email, password);
   try {
     if (!fullName || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+    const UserFullName = await User.findOne({ fullName });
+    if (UserFullName) {
+      return res
+        .status(400)
+        .json({ message: "This username is already taken. Try another one" });
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
