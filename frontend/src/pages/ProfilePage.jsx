@@ -9,7 +9,9 @@ const ProfilePage = () => {
   const [selectedImg, setSelectedImg] = useState(null);
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
+    const fileInput = e.target;
+    const file = fileInput.files[0];
+
     if (!file) {
       console.log("User has cancelled to upload image");
       return;
@@ -35,6 +37,8 @@ const ProfilePage = () => {
         const base64Image = reader.result;
         setSelectedImg(base64Image);
         await updateProfile({ profilePic: base64Image });
+        fileInput.value = "";
+        setSelectedImg(null);
       };
     } catch (error) {
       console.error("Error in image compression:", error);
