@@ -15,11 +15,14 @@ const useAuthStore = create((set, get) => ({
   // Socket states
   socket: null,
   onlineUsers: [],
-  msgSenderName:null,
+  msgSenderName: null,
 
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
+  setIsUpdatingProfile: (updatingProfile) => {
+    set({ isUpdatingProfile: updatingProfile });
+  },
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
@@ -72,7 +75,6 @@ const useAuthStore = create((set, get) => ({
     }
   },
   updateProfile: async (data) => {
-    set({ isUpdatingProfile: true });
     try {
       const res = await axiosInstance.put("/auth/update-profile", data);
       set({
@@ -83,8 +85,6 @@ const useAuthStore = create((set, get) => ({
     } catch (error) {
       console.log("Error in updating profile -", error);
       toast.error(error.res.data.message);
-    } finally {
-      set({ isUpdatingProfile: false });
     }
   },
   logout: async () => {
@@ -100,7 +100,7 @@ const useAuthStore = create((set, get) => ({
       set({ authUser: null, message: error.response.data.message });
     }
   },
-  setMsgSenderName: (senderName)=>{
+  setMsgSenderName: (senderName) => {
     set({ msgSenderName: senderName });
   },
   // Socket Implementation
@@ -118,7 +118,7 @@ const useAuthStore = create((set, get) => ({
     set({ socket: socket });
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
-    })
+    });
   },
   disconnectSocket: () => {
     if (get().socket?.connected) get().socket.disconnect();

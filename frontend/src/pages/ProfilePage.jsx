@@ -1,9 +1,11 @@
 import { useState } from "react";
 import useAuthStore from "../store/useAuthStore.js";
 import { Camera, User, Mail } from "lucide-react";
+import imageCompression from "browser-image-compression";
 
 const ProfilePage = () => {
-  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+  const { authUser, isUpdatingProfile, updateProfile, setIsUpdatingProfile } =
+    useAuthStore();
   const [selectedImg, setSelectedImg] = useState(null);
 
   const handleImageUpload = async (e) => {
@@ -12,19 +14,38 @@ const ProfilePage = () => {
       console.log("User has cancelled to upload image");
       return;
     }
-    // setSelectedImg(URL.createObjectURL(file));
-    const reader = new FileReader(); // so that we can use the image file as a string and we call it as base64 string
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
-      const base64Image = reader.result;
-      setSelectedImg(base64Image);
-      await updateProfile({ profilePic: base64Image });
-    };
+    try {
+      setIsUpdatingProfile(true);
+
+      let finalFile = file;
+      const fileSizeInKB = file.size / 1024; // Convert bytes to KB
+
+      if (fileSizeInKB > 500) {
+        const options = {
+          maxSizeMB: 0.5, // Maximum size in MB (500 KB)
+          maxWidthOrHeight: 1400, // Max width/height to maintain aspect ratio
+          useWebWorker: true, // Improves performance
+        };
+        finalFile = await imageCompression(file, options);
+      }
+      // Convert file (compressed or original) to base64 string
+      const reader = new FileReader();
+      reader.readAsDataURL(finalFile);
+      reader.onload = async () => {
+        const base64Image = reader.result;
+        setSelectedImg(base64Image);
+        await updateProfile({ profilePic: base64Image });
+      };
+    } catch (error) {
+      console.error("Error in image compression:", error);
+    } finally {
+      setIsUpdatingProfile(false);
+    }
   };
-  const displayDate =()=>{
-      const date = new Date(authUser.createdAt);
-      return  date.toLocaleDateString("en-GB").split("/").join("-");
-  }
+  const displayDate = () => {
+    const date = new Date(authUser.createdAt);
+    return date.toLocaleDateString("en-GB").split("/").join("-");
+  };
 
   return (
     <div className="container h-screen max-w-2xl pt-16 mx-auto sm:pt-20 bg-base-200 sm:bg-base-100">
