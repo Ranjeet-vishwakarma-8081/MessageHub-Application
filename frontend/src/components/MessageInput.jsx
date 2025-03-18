@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import useAuthStore from "../store/useAuthStore";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-
+import imageCompression from "browser-image-compression";
 const MessageInput = ({ keyboardHeight }) => {
   const [text, setText] = useState("");
   const fileInputRef = useRef(null);
@@ -17,19 +17,37 @@ const MessageInput = ({ keyboardHeight }) => {
     setSelectedCamera,
     imagePreview,
     setImagePreview,
+    isMessageSending,
+    setIsMessageSending,
   } = useChatStore();
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file.type.startsWith("image/")) {
       toast.error("Please select a image file");
       return;
     }
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      setImagePreview(reader.result);
-    };
+    try {
+      let finalFile = file;
+      const fileSizeInKB = file.size / 1024; // Convert bytes to KB
+
+      if (fileSizeInKB > 500) {
+        const options = {
+          maxSizeMB: 0.5, // Maximum size in MB (500 KB)
+          maxWidthOrHeight: 1400, // Max width/height to maintain aspect ratio
+          useWebWorker: true, // Improves performance
+        };
+        finalFile = await imageCompression(file, options);
+      }
+      // Convert file (compressed or original) to base64 string
+      const reader = new FileReader();
+      reader.readAsDataURL(finalFile);
+      reader.onload = () => {
+        setImagePreview(reader.result);
+      };
+    } catch (error) {
+      console.error("Error in image compression:", error);
+    }
   };
 
   const removeImage = () => {
@@ -41,6 +59,7 @@ const MessageInput = ({ keyboardHeight }) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
     try {
+      setIsMessageSending(true);
       handleStopTyping(); // Stop typing when message is sent
       await sendMessage({
         text: text.trim(),
@@ -52,6 +71,8 @@ const MessageInput = ({ keyboardHeight }) => {
     } catch (error) {
       toast.error(error.response.data.message);
       console.error("Failed to send message -", error.message);
+    } finally {
+      setIsMessageSending(false);
     }
   };
   const handleTyping = () => {
@@ -151,7 +172,7 @@ const MessageInput = ({ keyboardHeight }) => {
         <button
           type="submit"
           className="btn btn-circle btn-primary"
-          disabled={!text.trim() && !imagePreview}
+          disabled={isMessageSending}
         >
           <Send className="size-5" />
         </button>

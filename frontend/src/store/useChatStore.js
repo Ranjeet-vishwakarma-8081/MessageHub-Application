@@ -14,6 +14,10 @@ const useChatStore = create((set, get) => ({
   lastSeenTime: null,
   lastSeenDate: null,
   notifications: {},
+  isMessageSending: false,
+  setIsMessageSending: (messageSending) => {
+    set({ isMessageSending: messageSending });
+  },
   setNotifications: (authUserNotifications) => {
     set((prev) => ({
       notifications: {
