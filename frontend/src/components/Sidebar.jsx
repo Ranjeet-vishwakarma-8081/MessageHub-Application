@@ -65,9 +65,10 @@ const Sidebar = () => {
   const filterUsers = useCallback(() => {
     const searchTerm = searchRef.current?.value?.toLowerCase();
 
+    const allUsers = users.filter((user) => user._id !== authUser._id);
     let filtered = showOnlineOnly
-      ? users.filter((user) => onlineUsers.includes(user._id))
-      : users.filter((user) => user._id !== authUser._id); // Except the authUser
+      ? allUsers.filter((user) => onlineUsers.includes(user._id))
+      : allUsers;
 
     if (searchTerm) {
       filtered = filtered.filter((user) =>
