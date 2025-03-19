@@ -172,9 +172,13 @@ const MessageInput = ({ keyboardHeight }) => {
         <button
           type="submit"
           className="btn btn-circle btn-primary"
-          disabled={isMessageSending}
+          disabled={isMessageSending || (!text.trim() && !imagePreview)}
         >
-          <Send className="size-5" />
+          {isMessageSending && imagePreview ? (
+            <span className="loading loading-spinner"></span>
+          ) : (
+            <Send className="size-5" />
+          )}
         </button>
       </form>
     </div>
