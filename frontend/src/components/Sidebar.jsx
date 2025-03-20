@@ -16,6 +16,8 @@ const Sidebar = () => {
     setNotifications,
     incrementNotification,
     clearNotification,
+    recentChats,
+    setRecentChats,
   } = useChatStore();
   const { onlineUsers, socket, setMsgSenderName, msgSenderName, authUser } =
     useAuthStore();
@@ -65,6 +67,7 @@ const Sidebar = () => {
   const filterUsers = useCallback(() => {
     const searchTerm = searchRef.current?.value?.toLowerCase();
 
+    // Exclude the authenticated user from the list
     const allUsers = users.filter((user) => user._id !== authUser._id);
     let filtered = showOnlineOnly
       ? allUsers.filter((user) => onlineUsers.includes(user._id))
@@ -76,8 +79,27 @@ const Sidebar = () => {
       );
     }
 
+    filtered.sort((a, b) => {
+      const aHasNotification = notifications[a._id] ? 1 : 0;
+      const bHasNotification = notifications[b._id] ? 1 : 0;
+
+      // Check if the user is in recentChats
+      const aIsRecent = recentChats.some((u) => u._id === a._id) ? 1 : 0;
+      const bIsRecent = recentChats.some((u) => u._id === b._id) ? 1 : 0;
+
+      // Sort by: Notifications First -> Then Recent Chats -> Default Order
+      return bHasNotification - aHasNotification || bIsRecent - aIsRecent;
+    });
+
     setFilteredUsers(filtered);
-  }, [users, onlineUsers, showOnlineOnly, authUser]);
+  }, [
+    users,
+    onlineUsers,
+    showOnlineOnly,
+    authUser,
+    notifications,
+    recentChats,
+  ]);
 
   // fetch users on componenet mount
   useEffect(() => {
@@ -101,10 +123,12 @@ const Sidebar = () => {
   const handleUserClick = async (user) => {
     if (notifications[user._id]) {
       try {
-        // notification reset in MongoDB
+        // Reset notification in MongoDB
         await resetNotifications(authUser._id, user._id);
-        // Remove notification for this user in local state
         clearNotification(user._id);
+
+        // Add user to recentChats to keep them at the top
+        setRecentChats(user);
         await getUsers();
         setSelectedUser(user);
       } catch (error) {

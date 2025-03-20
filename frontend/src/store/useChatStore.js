@@ -15,6 +15,13 @@ const useChatStore = create((set, get) => ({
   lastSeenDate: null,
   notifications: {},
   isMessageSending: false,
+  recentChats: [],
+  setRecentChats: (user) => {
+    set((prev) => {
+      const updatedChats = prev.recentChats.filter((u) => u._id !== user._id);
+      return { recentChats: [user, ...updatedChats] };
+    });
+  },
   setIsMessageSending: (messageSending) => {
     set({ isMessageSending: messageSending });
   },
