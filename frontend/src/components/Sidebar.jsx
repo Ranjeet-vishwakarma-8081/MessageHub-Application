@@ -84,8 +84,8 @@ const Sidebar = () => {
       const bHasNotification = notifications[b._id] ? 1 : 0;
 
       // Check if the user is in recentChats
-      const aIsRecent = recentChats.some((u) => u._id === a._id) ? 1 : 0;
-      const bIsRecent = recentChats.some((u) => u._id === b._id) ? 1 : 0;
+      const aIsRecent = recentChats.some((userId) => userId === a._id) ? 1 : 0;
+      const bIsRecent = recentChats.some((userId) => userId === b._id) ? 1 : 0;
 
       // Sort by: Notifications First -> Then Recent Chats -> Default Order
       return bHasNotification - aHasNotification || bIsRecent - aIsRecent;
@@ -121,22 +121,18 @@ const Sidebar = () => {
   }, [socket, setMsgSenderName]);
 
   const handleUserClick = async (user) => {
-    if (notifications[user._id]) {
-      try {
+    try {
+      if (notifications[user._id]) {
         // Reset notification in MongoDB
         await resetNotifications(authUser._id, user._id);
         clearNotification(user._id);
-
         // Add user to recentChats to keep them at the top
         setRecentChats(user);
-        await getUsers();
-        setSelectedUser(user);
-      } catch (error) {
-        console.log("Error in notification clearing - ", error.message);
       }
-    } else {
       await getUsers();
       setSelectedUser(user);
+    } catch (error) {
+      console.log("Error in notification clearing - ", error.message);
     }
   };
 
