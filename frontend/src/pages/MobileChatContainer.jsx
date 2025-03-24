@@ -59,28 +59,31 @@ const MobileChatContainer = () => {
   }, [isMessageTyping, messages]);
 
   useEffect(() => {
+    const initialHeight = window.innerHeight;
+
     const handleResize = () => {
-      const visualViewportHeight =
+      const viewportHeight =
         window.visualViewport?.height || window.innerHeight;
-      const keyboardHeight = window.innerHeight - visualViewportHeight;
-      setKeyboardHeight(keyboardHeight);
+      const keyboardHeight = initialHeight - viewportHeight;
+      setKeyboardHeight((prev) =>
+        prev !== keyboardHeight ? keyboardHeight : prev
+      );
     };
 
     window.visualViewport?.addEventListener("resize", handleResize);
     return () =>
       window.visualViewport?.removeEventListener("resize", handleResize);
   }, []);
+
   useEffect(() => {
     const updateHeight = () => {
       const isSmallScreen = window.innerWidth < 640;
-      if (isSmallScreen) {
-        // setViewportHeight(`calc(100vh - ${keyboardHeight}px)`);
-        setViewportHeight(
-          keyboardHeight ? `calc(100vh - ${keyboardHeight}px)` : "100vh"
-        );
-      } else {
-        setViewportHeight("");
-      }
+      const newHeight = isSmallScreen
+        ? keyboardHeight
+          ? `calc(100vh - ${keyboardHeight}px)`
+          : "100vh"
+        : "";
+      setViewportHeight((prev) => (prev !== newHeight ? newHeight : prev));
     };
 
     window.addEventListener("resize", updateHeight);
@@ -88,6 +91,7 @@ const MobileChatContainer = () => {
 
     return () => window.removeEventListener("resize", updateHeight);
   }, [keyboardHeight]);
+
   if (isMessagesLoading) {
     return (
       <div className="flex flex-col flex-1 pt-16 overflow-auto h-dvh sm:pt-0 sm:h-full">

@@ -107,9 +107,7 @@ const MessageInput = ({ keyboardHeight }) => {
 
   return (
     <div
-      className={`${
-        selectedUser && " fixed sm:static inset-x-0 bottom-0 bg-base-100 "
-      } w-full p-3 pb-3`}
+      className="fixed inset-x-0 bottom-0 w-full p-3 pb-3 sm:static bg-base-100"
       style={{ bottom: `${keyboardHeight}px` }} // Adjust for keyboard height
     >
       {imagePreview && (
