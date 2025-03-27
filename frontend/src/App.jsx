@@ -2,8 +2,6 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
-import { AnimatePresence, motion } from "framer-motion";
-import PropTypes from "prop-types";
 
 import useAuthStore from "./store/useAuthStore";
 import useThemeStore from "./store/useThemeStore";
@@ -17,12 +15,6 @@ import ProfilePage from "./pages/ProfilePage";
 import CapturePhoto from "./components/CapturePhoto";
 import useChatStore from "./store/useChatStore";
 import MobileChatContainer from "./pages/MobileChatContainer";
-
-const pageVariants = {
-  initial: { opacity: 0, x: 50 },
-  animate: { opacity: 1, x: 0, transition: { duration: 0.5 } },
-  exit: { opacity: 0, x: 50, transition: { duration: 0.5 } },
-};
 
 const App = () => {
   const location = useLocation();
@@ -61,7 +53,7 @@ const App = () => {
     );
 
   return (
-    <div data-theme={theme} className="overflow-x-hidden select-none">
+    <div data-theme={theme} className="select-none">
       {/* Toast library Implementation */}
       {/* <Toaster /> */}
       <Toaster
@@ -75,120 +67,59 @@ const App = () => {
         }}
       />
       <Navbar />
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route
-            exact
-            path="/"
-            element={
-              authUser ? (
-                <PageWrapper>
-                  <HomePage />
-                </PageWrapper>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-          <Route
-            exact
-            path="/chat-container"
-            element={
-              authUser && selectedUser ? (
-                <PageWrapper>
-                  <MobileChatContainer />
-                </PageWrapper>
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
-          <Route
-            exact
-            path="/chat-container/capture-photo"
-            element={
-              authUser && selectedUser ? (
-                <CapturePhoto />
-              ) : (
-                <Navigate to={"/chat-container"} />
-              )
-            }
-          />
-          <Route
-            exact
-            path="/signup"
-            element={
-              !authUser ? (
-                <PageWrapper>
-                  <SignUpPage />
-                </PageWrapper>
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
-          <Route
-            exact
-            path="/login"
-            element={
-              !authUser ? (
-                <PageWrapper>
-                  <LoginPage />
-                </PageWrapper>
-              ) : (
-                <Navigate to="/" />
-              )
-            }
-          />
-          <Route
-            exact
-            path="/settings"
-            element={
-              <PageWrapper>
-                <SettingsPage />
-              </PageWrapper>
-            }
-          />
-          <Route
-            exact
-            path="/profile"
-            element={
-              authUser ? (
-                <PageWrapper>
-                  <ProfilePage />
-                </PageWrapper>
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-          <Route
-            path="*"
-            element={
-              authUser ? <Navigate to={"/"} /> : <Navigate to={"/login"} />
-            }
-          ></Route>
-        </Routes>
-      </AnimatePresence>
+      <Routes>
+        <Route
+          exact
+          path="/"
+          element={authUser ? <HomePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          exact
+          path="/chat-container"
+          element={
+            authUser && selectedUser ? (
+              <MobileChatContainer />
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+        <Route
+          exact
+          path="/chat-container/capture-photo"
+          element={
+            authUser && selectedUser ? (
+              <CapturePhoto />
+            ) : (
+              <Navigate to={"/chat-container"} />
+            )
+          }
+        />
+        <Route
+          exact
+          path="/signup"
+          element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
+        />
+        <Route
+          exact
+          path="/login"
+          element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+        />
+        <Route exact path="/settings" element={<SettingsPage />} />
+        <Route
+          exact
+          path="/profile"
+          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="*"
+          element={
+            authUser ? <Navigate to={"/"} /> : <Navigate to={"/login"} />
+          }
+        ></Route>
+      </Routes>
     </div>
   );
 };
 
-const PageWrapper = ({ children }) => {
-  return (
-    <motion.div
-      className="overflow-x-hidden"
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-PageWrapper.propTypes = {
-  children: PropTypes.node.isRequired, // Ensures children is a valid React node
-};
 export default App;
