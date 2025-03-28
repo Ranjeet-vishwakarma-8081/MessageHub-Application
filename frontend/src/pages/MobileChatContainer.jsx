@@ -54,9 +54,9 @@ const MobileChatContainer = () => {
     unsubscribeFromMessages,
   ]);
   useEffect(() => {
-    if (bottomRef.current)
+    if (bottomRef.current && !keyboardHeight)
       bottomRef.current.scrollIntoView({ behavior: "instant" });
-  }, [isMessageTyping, messages]);
+  }, [isMessageTyping, messages, keyboardHeight]);
 
   useEffect(() => {
     const initialHeight = window.innerHeight;
