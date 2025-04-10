@@ -84,7 +84,6 @@ const CapturePhoto = () => {
             className="hidden"
             ref={fileInputRef}
             onChange={handleImageChange}
-            name="pick_image"
           />
           <button type="button" onClick={() => fileInputRef.current?.click()}>
             <Image className="size-6" />

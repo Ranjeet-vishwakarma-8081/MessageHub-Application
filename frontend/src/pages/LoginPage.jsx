@@ -52,7 +52,6 @@ const Loginpage = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  name="login_email"
                 />
               </div>
             </div>
@@ -73,7 +72,6 @@ const Loginpage = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  name="login_password"
                 />
                 <button
                   type="button"

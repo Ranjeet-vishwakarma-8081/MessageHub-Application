@@ -60,7 +60,6 @@ const SignUpPage = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, fullName: e.target.value })
                   }
-                  name="signup_name"
                 />
               </div>
             </div>
@@ -80,7 +79,6 @@ const SignUpPage = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  name="signup_email"
                 />
               </div>
             </div>
@@ -101,7 +99,6 @@ const SignUpPage = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
                   }
-                  name="signup_password"
                 />
                 <button
                   type="button"

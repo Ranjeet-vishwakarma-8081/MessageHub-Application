@@ -149,7 +149,6 @@ const SettingsPage = () => {
                         className="flex-1 w-full rounded-full input input-bordered input-md focus:outline-none"
                         placeholder="This is a preview"
                         readOnly
-                        name="preview_input"
                       />
                       <button
                         type="button"

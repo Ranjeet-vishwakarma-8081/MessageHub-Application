@@ -155,7 +155,6 @@ const MessageInput = ({ keyboardHeight }) => {
             className="hidden"
             ref={fileInputRef}
             onChange={handleImageChange}
-            name="pick_image"
           />
           <button
             type="button"

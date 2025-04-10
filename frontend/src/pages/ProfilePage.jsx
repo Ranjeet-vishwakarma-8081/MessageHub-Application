@@ -82,7 +82,6 @@ const ProfilePage = () => {
                   accept="image/*"
                   onChange={handleImageUpload}
                   disabled={isUpdatingProfile}
-                  name="profile_picture"
                 />
               </label>
             </div>

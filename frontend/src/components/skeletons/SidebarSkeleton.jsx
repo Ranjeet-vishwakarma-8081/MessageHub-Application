@@ -17,13 +17,12 @@ const SidebarSkeleton = () => {
             type="text"
             className="w-full pl-10 rounded-full input input-bordered input-md focus:outline-none placeholder:text-xs sm:placeholder:text-sm"
             placeholder="Start typing to find contacts"
-            name="search"
           />
         </div>
         {/* Online Users Toggle*/}
         <div className="flex items-center gap-2">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" className="checkbox checkbox-sm" name="checkbox"/>
+            <input type="checkbox" className="checkbox checkbox-sm" />
             <span className="text-sm">Show online only</span>
           </label>
           <span className="text-xs text-zinc-500">(0 online)</span>
