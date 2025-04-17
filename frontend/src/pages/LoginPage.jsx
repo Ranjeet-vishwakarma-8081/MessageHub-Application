@@ -47,7 +47,7 @@ const Loginpage = () => {
                 <input
                   type="email"
                   className="w-full pl-10 input input-bordered focus:outline-none"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
