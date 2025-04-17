@@ -55,7 +55,7 @@ const SignUpPage = () => {
                 <input
                   type="text"
                   className="w-full pl-10 input input-bordered focus:outline-none"
-                  placeholder="John Doe"
+                  placeholder="Enter your name"
                   value={formData.fullName}
                   onChange={(e) =>
                     setFormData({ ...formData, fullName: e.target.value })
@@ -74,7 +74,7 @@ const SignUpPage = () => {
                 <input
                   type="email"
                   className="w-full pl-10 input input-bordered focus:outline-none"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email"
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
