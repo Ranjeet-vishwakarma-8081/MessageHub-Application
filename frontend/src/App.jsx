@@ -47,7 +47,7 @@ const App = () => {
   // If checkingAuth, display a loading spinner.
   if (isCheckingAuth && !authUser)
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div data-theme={theme} className="flex items-center justify-center h-screen">
         <Loader className="size-15 animate-spin" />
       </div>
     );
