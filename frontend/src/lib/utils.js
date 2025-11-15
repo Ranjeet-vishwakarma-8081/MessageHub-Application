@@ -19,5 +19,5 @@ export const formatDate = (date) => {
       messageDate
     );
   }
-  return messageDate.toLocaleDateString("en-GB").replace(/\//g, "/"); // Format: DD/MM/YY
+  return messageDate.toLocaleDateString("en-GB");
 };
