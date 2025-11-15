@@ -26,7 +26,7 @@ export const signup = async (req, res) => {
         .status(400)
         .json({ message: "This username is already taken. Try another one" });
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
     }
     if (password.length < 6) {
