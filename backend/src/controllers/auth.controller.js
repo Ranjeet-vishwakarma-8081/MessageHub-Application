@@ -16,8 +16,10 @@ export const checkAuth = (req, res) => {
 };
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
+  const safeEmail = String(email).trim().toLowerCase();
+
   try {
-    if (!fullName || !email || !password) {
+    if (!fullName || !safeEmail || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
     const UserFullName = await User.findOne({ fullName });
@@ -26,7 +28,7 @@ export const signup = async (req, res) => {
         .status(400)
         .json({ message: "This username is already taken. Try another one" });
     }
-    if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) {
+    if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(safeEmail)) {
       return res.status(400).json({ message: "Invalid email format" });
     }
     if (password.length < 6) {
@@ -34,7 +36,7 @@ export const signup = async (req, res) => {
         .status(400)
         .json({ message: "Password must be at-least 6 characters" });
     }
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: safeEmail });
     if (user) {
       return res
         .status(400)
@@ -46,7 +48,7 @@ export const signup = async (req, res) => {
 
     const newUser = new User({
       fullName,
-      email,
+      email: safeEmail,
       password: hashedPassword,
     });
 
@@ -75,16 +77,21 @@ export const signup = async (req, res) => {
 };
 export const login = async (req, res) => {
   const { email, password } = req.body;
+  const safeEmail = String(email).trim().toLowerCase();
+
   try {
-    if (!email || !password) {
+    if (!safeEmail || !password) {
       return res.status(400).json({ message: "All fields are required" });
+    }
+    if (!/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(safeEmail)) {
+      return res.status(400).json({ message: "Invalid email format" });
     }
     if (password.length < 6) {
       return res
         .status(400)
         .json({ message: "Password must be at-least 6 characters" });
     }
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: safeEmail });
     if (!user) {
       return res
         .status(404)
