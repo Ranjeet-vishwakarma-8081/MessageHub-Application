@@ -41,6 +41,13 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
+app.get("/health", (_req, res) => {
+  res.status(200).json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // If we're in Production then make the dist folder to be our static assets
 if (process.env.NODE_ENV === "production") {
    // Serve static files from the frontend's dist directory
